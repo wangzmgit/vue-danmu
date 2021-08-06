@@ -1,7 +1,7 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-const AdminURL = "http://localhost/api/";
+const AdminURL = "http://localhost:9000/api/";
 export const CarouselUrl = AdminURL + "v1/admin/carousel/upload/img"
 
 const service = axios.create({

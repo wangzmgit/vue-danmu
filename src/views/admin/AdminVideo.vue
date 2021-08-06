@@ -123,8 +123,8 @@ export default {
   },
   filters: {
     toOriginal(original) {
-      if (original) return "是";
-      else return "否";
+      if (original) return "否";
+      else return "是";
     },
     toTime(time) {
       return utcToBeijing(time);

@@ -157,6 +157,7 @@ export default {
       review(this.form).then((res) => {
         if (res.data.code === 2000) {
           this._getReviewList();
+          this.reviewVisible = false;
         }
       }).catch((err) => { 
         this.$message.error(err.response.data.msg);
@@ -168,8 +169,8 @@ export default {
   },
   filters: {
     toOriginal(original) {
-      if (original) return "是";
-      else return "否";
+      if (original) return "否";
+      else return "是";
     },
     toTime(time) {
       return utcToBeijing(time);
