@@ -1,5 +1,5 @@
 <template>
-  <div class="home" v-title :data-title="`HI!Danmu首页`">
+  <div class="home" v-title data-title="HI!Danmu首页">
     <header-bar></header-bar>
     <div class="home-box">
       <div class="home-top">
@@ -128,5 +128,6 @@ export default {
   text-align: center;
   padding-bottom: 10px;
 }
+
 </style>
 

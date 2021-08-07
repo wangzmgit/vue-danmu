@@ -99,4 +99,13 @@ export default {
   -webkit-box-orient: vertical;
 }
 
+/*屏幕宽度大于1600px时的布局*/
+@media screen and (min-width:1600px) {
+
+  .v-card {
+    width: 16%;
+    padding: 8px 8px;
+  }
+}
+
 </style>

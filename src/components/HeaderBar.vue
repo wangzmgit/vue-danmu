@@ -67,6 +67,7 @@ export default {
   -moz-box-shadow:0px 0px 3px #c8c8c8 ;
   box-shadow:0px 0px 3px #c8c8c8 ;
 }
+
 .header-box {
   margin: 0 auto;
   padding-top: 5px;
@@ -108,5 +109,12 @@ export default {
   top: 3px;
   margin: 0 1px;
   font-size: 16px;
+}
+
+/*屏幕宽度大于1600px时的布局*/
+@media screen and (min-width:1600px) {
+  .header-box {
+    width: 1500px;
+  }
 }
 </style>

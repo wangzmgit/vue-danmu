@@ -150,4 +150,16 @@ export default {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
 }
+
+/*屏幕宽度大于1600px时的布局*/
+@media screen and (min-width:1600px) {
+  .result {
+    width: 1500px;
+  }
+
+  .card-box {
+    width: 16%;
+    height: 180px;
+  }
+}
 </style>

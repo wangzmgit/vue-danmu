@@ -258,7 +258,7 @@ export default {
     },
   },
   created() {
-    this.vid = this.$route.params.vid;
+    this.vid = Number(this.$route.params.vid);
     this._getVideoInfo(this.vid);
     //获取交互信息
     this._getInteractiveData(this.vid);
@@ -442,6 +442,11 @@ export default {
   width: 140px;
   font-size: 14px;
   color: #303030;
+  overflow: hidden;
+  text-overflow: ellipsis; 
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
 }
 
 .follow-btn{
@@ -455,4 +460,49 @@ export default {
   font-size: 18px;
 }
 
+
+/*屏幕宽度大于1600px时的布局*/
+@media screen and (min-width:1600px) {
+  .content-left {
+    width: calc(100% - 400px);
+  }
+
+  .content-right {
+    width: 400px;
+  }
+
+  .video-author {
+    width: 100%;
+    height: 110px;
+  }
+
+  .video-author-avatar {
+    padding-top: 25px;
+    padding-left: 16px;
+  }
+
+  .video-author-name {
+    top: 24px;
+    left: 90px;
+    width: 160px;
+    font-size: 20px;
+  }
+
+  .video-author-sign {
+    top: 60px;
+    left: 90px;
+    width: 210px;
+    font-size: 16px;
+  }
+
+  .follow-btn{
+    right: 20px;
+    top: 40px;
+  }
+
+  .follow-btn>button{
+    width: 70px;
+    height: 30px;
+  }
+}
 </style>

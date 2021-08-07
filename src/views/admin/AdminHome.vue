@@ -1,5 +1,5 @@
 <template>
-  <div class="admin">
+  <div class="admin" v-title data-title="后台管理系统">
     <div class="admin-header">
       <h2>后台管理系统</h2>
     </div>
