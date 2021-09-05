@@ -2,7 +2,6 @@ import request from '@/utils/request'
 
 //发送弹幕
 export const sendDanmaku = ({vid,time,color,type,content}) => {
-    type = Number(type);
     return request.post('v1/danmaku/send', { vid,time,color,type,content });
 }
 

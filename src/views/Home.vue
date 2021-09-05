@@ -4,7 +4,7 @@
     <div class="home-box">
       <div class="home-top">
         <div class="home-top-left">
-          <a-carousel>
+          <a-carousel :autoplay="true">
             <div v-for="(item, index) in carousel" :key="index">
               <img class="carousel-img" :src="item.img" @click="go(item.url)"/>
             </div>

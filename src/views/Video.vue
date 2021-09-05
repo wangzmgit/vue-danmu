@@ -12,13 +12,13 @@
           <div class="video-date">
             <!--点赞收藏-->
             <div class="interactive">
-              <a-icon v-if="!interactive.like" type="heart" theme="filled" @click="_like()"/>
-              <a-icon v-else type="heart" theme="filled" style="color:#eb2f96" @click="_dislike()"/>      
+              <i v-if="!interactive.like" class="iconfont icon-like like-not-activated" @click="_like()"/>
+              <i v-else class="iconfont icon-like" style="color:#eb2f96" @click="_dislike()"/>      
               <p>{{data.like_count}}</p>
             </div>
             <div class="interactive">
-              <a-icon v-if="!interactive.collect" type="star" theme="filled" @click="_collect()"/>
-              <a-icon v-else type="star" theme="filled" style="color:#faad14" @click="_cancelCollect()"/>
+              <i v-if="!interactive.collect" class="iconfont icon-collect collect-not-activated" @click="_collect()"/>
+              <i v-else class="iconfont icon-collect" style="color:#faad14" @click="_cancelCollect()"/>
               <p>{{data.collect_count}}</p>
             </div>
             <p>上传于{{ videoInfo.create_at | toTime }}</p>
@@ -32,7 +32,7 @@
           <!--发表评论-->
           <div class="comment-box">
             <!--头像-->
-            <a-avatar v-if="userInfo.avatar" :size="50" :src="userInfo.avatar" />
+            <a-avatar v-if="userInfo" :size="50" :src="userInfo.avatar" />
             <a-avatar v-else :size="50" icon="user" />
             <!--输入框-->
             <a-input v-model="content" :autosize="{ minRows: 3, maxRows: 3 }" :maxLength="200" placeholder="在这里写点什么吧!" type="textarea"/>
@@ -81,7 +81,7 @@
 <script>
 import Cookies from 'js-cookie'
 import HeaderBar from "@/components/HeaderBar.vue";
-import WPlayer from "@/components/WPlayer";
+import WPlayer from "@/components/WPlayer.vue";
 import CommentList from "@/components/CommentList";
 import { getVideoInfo } from "@/api/video.js";
 import {like,dislike,collect,cancelCollect,getInteractiveData} from "@/api/interactive.js"
@@ -126,8 +126,10 @@ export default {
         if (res.data.code === 2000) {
           this.interactive = res.data.data.data;
         }
-      }).catch(() => {
-        this.$message.error("未登录");
+      }).catch((err) => {
+        if (err.response.data.code != 401){
+          this.$message.error(err.response.data.msg);
+        }
       });
     },
     _like(){
@@ -261,7 +263,9 @@ export default {
     this.vid = Number(this.$route.params.vid);
     this._getVideoInfo(this.vid);
     //获取交互信息
-    this._getInteractiveData(this.vid);
+    if(this.userInfo){
+      this._getInteractiveData(this.vid);
+    }
     //获取评论
     this._getCommentList();
   },
@@ -356,9 +360,18 @@ export default {
 }
 
 .interactive>i{
-  font-size: 30px;
-  line-height: 36px;
+  font-size: 26px;
+  line-height: 30px;
   cursor: pointer;
+}
+
+/**点赞收藏未激活时鼠标悬浮效果 */
+.like-not-activated:hover{
+  color: #eb2f96;
+}
+
+.collect-not-activated:hover{
+  color: #faad14;
 }
 
 .interactive>p{

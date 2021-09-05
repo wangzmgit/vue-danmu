@@ -1,0 +1,58 @@
+{
+  "id": "2767748",
+  "name": "新版弹幕",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "2154213",
+      "name": "播放数_32",
+      "font_class": "views",
+      "unicode": "e666",
+      "unicode_decimal": 58982
+    },
+    {
+      "icon_id": "3050500",
+      "name": "收藏",
+      "font_class": "collect",
+      "unicode": "e60d",
+      "unicode_decimal": 58893
+    },
+    {
+      "icon_id": "3050826",
+      "name": "点赞",
+      "font_class": "like",
+      "unicode": "e621",
+      "unicode_decimal": 58913
+    },
+    {
+      "icon_id": "7843972",
+      "name": "收藏",
+      "font_class": "heart",
+      "unicode": "e622",
+      "unicode_decimal": 58914
+    },
+    {
+      "icon_id": "17984171",
+      "name": "关  闭",
+      "font_class": "close",
+      "unicode": "e6c9",
+      "unicode_decimal": 59081
+    },
+    {
+      "icon_id": "2154214",
+      "name": "UP主_32",
+      "font_class": "up",
+      "unicode": "e667",
+      "unicode_decimal": 58983
+    },
+    {
+      "icon_id": "7738371",
+      "name": "操作",
+      "font_class": "operate",
+      "unicode": "e60a",
+      "unicode_decimal": 58890
+    }
+  ]
+}

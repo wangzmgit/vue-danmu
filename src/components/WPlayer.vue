@@ -1,11 +1,36 @@
 <template>
   <div @mouseleave="leave()" @mousemove="mousemove()">
-    <div id="video" ref="videowindow">
+    <div id="video" ref="videowindow" @contextmenu="rightShow">
+      <!--右键菜单-->
+      <vue-context-menu class="player-menu"
+      :contextMenuData="contextMenuData" @showVideoDetails="showVideoDetails()"
+      @videoMirror="videoMirror()">
+      </vue-context-menu>
+      <!--视频信息-->
+      <div v-if="setting.details" class="video-details">
+        <a-button class="icon-button" type="link" @click="setting.details = false">
+          <p>[X]</p>
+        </a-button>
+        <div>
+          <tr>
+            <td>Video type:</td>
+            <td>{{video.type}}</td>
+          </tr>
+          <tr>
+            <td>Video resolution:</td>
+            <td>{{video.resolution}}</td>
+          </tr>
+          <tr>
+            <td>Video duration:</td>
+            <td>{{video.duration}}</td>
+          </tr>
+        </div>
+      </div>
       <!--弹幕层-->
       <div id="poptextdiv" v-if="openDanmaku" ref="poptextdiv"></div>
       <video :src="src" preload="auto" ref="video" id="player" 
-      @contextmenu.prevent="rightShow()" @canplay="videoInit()" 
-      @timeupdate="timeUpdate()" @ended="videoEnd()"/> 
+      @canplay="videoInit()" @timeupdate="timeUpdate()" 
+      @ended="videoEnd()"/> 
       <!--控制器-->
       <transition>
         <div id="control" v-show="showControl" ref="control">
@@ -50,7 +75,7 @@
     <!--弹幕发送区-->
     <div class="danmaku">
       <p>{{danmakuList.length}}条弹幕</p>
-      <a-switch v-model="openDanmaku" class="danmaku-switch" checked-children="开" un-checked-children="关" />
+      <a-switch v-model="openDanmaku" class="danmaku-switch" checked-children="开" un-checked-children="关" @change="danmakuChange()"/>
       <a-button type="link" @click="showSettingMenu('danmaku')">
         <a-icon class="danmaku-icon" type="setting" />
       </a-button>
@@ -73,8 +98,8 @@
             <a-radio-button value="2">底部</a-radio-button>
           </a-radio-group>
         </div>
-        <p class="danmaku-menu-title">弹幕透明度</p>
-        <a-slider style="width:90%;margin:0 auto;" :tip-formatter="null" v-model="transparency" :max="100"/>
+        <p class="danmaku-menu-title">弹幕不透明度</p>
+        <a-slider style="width:90%;margin:0 auto;" :tip-formatter="null" v-model="transparency" :max="100" @change="setTransparency"/>
       </div>
     </div>
   </div>
@@ -98,7 +123,10 @@ export default {
       danmakuList:[],
       //基本信息变量
       video:{
+        type:"",
+        resolution:"",//视频分辨率
         currentTime:0,//当前时长
+        duration:0,//未取整的时长
         videoLength:0,//总时长
         play: false, //播放还是暂停 true播放中
         status:"play",//视频状态
@@ -109,12 +137,13 @@ export default {
       isFull: false, // 是否全屏
       openDanmaku:true,//是否开启弹幕
       nowTime:"00:00",//监听当前时间
-      transparency:0,//弹幕透明度
+      transparency:100,//弹幕不透明度
       showControl:true,//显示控制栏
       setting:{
         speed:false,//倍速菜单是否打开
         volume:false,//音量菜单是否打开
         danmaku:false,//弹幕菜单是否打开
+        details:false,//显示视频详细信息
       },
       //弹幕配置信息
       danmakuConfig:{
@@ -133,14 +162,39 @@ export default {
         color:"#fff",
         type:"0",
         content:"",
-      }
+      },
+      // 菜单数据
+      contextMenuData: {
+        menuName: "demo",
+        //菜单显示的位置
+        axis: {
+          x: null,  
+          y: null,
+        },
+        //菜单选项
+        menulists: [
+          {
+            fnHandler: "videoMirror",
+            btnName: "镜像",
+          },
+          {
+            fnHandler: "showVideoDetails",
+            btnName: "视频信息",
+          },
+        ],
+      },
     };
   },
   methods: {
     videoInit(){
-      var duration = this.$refs.video.duration;
+      let video = this.$refs.video
+      let duration = video.duration;
+      let src = video.src;
+      this.video.duration = duration;
       //取整,保证进度条能够走完
       this.video.videoLength = parseInt(duration);
+      this.video.type = src.substring(src.lastIndexOf(".") + 1,src.length);
+      this.video.resolution = video.videoWidth + "X" + video.videoHeight;
     },
     playOrPause() {
       if (this.video.play) {
@@ -245,8 +299,28 @@ export default {
       }
     },
     //视频右键菜单
-    rightShow(){
-      
+    rightShow(event){
+      event.preventDefault();
+      var x = event.clientX;
+      var y = event.clientY;
+      this.contextMenuData.axis = {x,y};
+    },
+    //镜像翻转
+    videoMirror() {
+      let player = document.getElementById("player");
+      if(player.className){
+        //正常情况下的css
+        player.className = "";
+      }else{
+        player.className = "player-mirror";
+      }
+    },
+    showVideoDetails() {
+      this.setting.details = !this.setting.details;
+    },
+    //弹幕开关改变
+    danmakuChange(){
+      localStorage.setItem("player-danmaku-show",this.openDanmaku*1);
     },
     //设置弹幕颜色
     setColor(color) {
@@ -398,9 +472,26 @@ export default {
         }
       }
     },
+    setTransparency(){
+      let danmaku = document.getElementById("poptextdiv");
+      if(danmaku != null){
+        danmaku.style.opacity = parseFloat(this.transparency) * 0.01;
+      }
+      localStorage.setItem("player-danmaku-opaque",this.transparency);
+    },
   },
   created() {
     this._getDanmaku();
+    let opaque = localStorage.getItem("player-danmaku-opaque");
+    let showDanmaku = localStorage.getItem("player-danmaku-show");
+    if(opaque != null){
+      this.transparency = Number(opaque);
+    }
+    if(showDanmaku != null){
+      this.openDanmaku = Boolean(Number(localStorage.getItem("player-danmaku-show")));
+    }else{
+      localStorage.setItem("player-danmaku-show",this.openDanmaku*1);
+    }
   },
   watch:{
     nowTime(time){
@@ -430,10 +521,6 @@ export default {
         }
       }
     },
-    transparency(){
-      document.getElementById("poptextdiv").style.opacity =
-        parseFloat(100 - this.transparency) * 0.01;
-    },
   },
   filters: {
     videoTime(time) {
@@ -455,6 +542,65 @@ export default {
   padding-bottom: 56.25%;
 }
 
+/**镜像翻转 */
+.player-mirror{
+  transform: rotateY(180deg);
+  -webkit-transform:rotateY(180deg); /* Safari and Chrome */
+  -moz-transform:rotateY(180deg); /* Firefox */
+}
+
+/**右键菜单 */
+.player-menu{
+  width: 120px;
+  height: 70px;
+  padding: 0;
+  background-color: rgba(0, 0, 0, 0.7)!important;
+  box-shadow: none!important;
+}
+
+.player-menu>li{
+  color: #fff;
+  margin: 10px 0!important;
+  font-size: 14px;
+  font-family:Microsoft YaHei;
+  background-color: transparent!important;
+}
+
+/**视频详情 */
+.video-details{
+  position: absolute;
+  width: 300px;
+  height: 90px;
+  z-index: 3;
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.video-details>button{
+  float: right;
+  color: #fff;
+}
+
+.video-details>div{
+  width: 260px;
+  margin: 10px 20px;
+}
+
+.video-details>div>tr{
+  width: 260px;
+}
+
+.video-details>div>tr>td:nth-child(1){
+  width: 150px;
+  text-align: right;
+}
+.video-details>div>tr>td:nth-child(2){
+  width: 100px;
+  padding-left: 10px;
+  text-align: left;
+}
+
+/**弹幕层 */
 #poptextdiv {
   z-index: 1;
   position: absolute;
@@ -500,6 +646,10 @@ export default {
 
 .control-right{
   float: right;
+}
+
+.icon-button{
+  margin-top: 6px;
 }
 
 .c-icon{
