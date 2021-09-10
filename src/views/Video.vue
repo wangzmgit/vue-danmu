@@ -81,7 +81,7 @@
 <script>
 import Cookies from 'js-cookie'
 import HeaderBar from "@/components/HeaderBar.vue";
-import WPlayer from "@/components/WPlayer.vue";
+import WPlayer from "@/components/WPlayer/WPlayer.vue";
 import CommentList from "@/components/CommentList";
 import { getVideoInfo } from "@/api/video.js";
 import {like,dislike,collect,cancelCollect,getInteractiveData} from "@/api/interactive.js"
