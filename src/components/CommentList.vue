@@ -91,7 +91,6 @@ export default {
       if (Cookies.get("userInfo")) {
         return JSON.parse(Cookies.get("userInfo"));
       } else {
-
         return {"uid":0};
       }
     },
@@ -113,7 +112,7 @@ export default {
     },
     _reply(index){
       if(this.reply.content == ""){
-        this.$message.error("评论内容不可以为空");
+        this.$message.error("回复内容不可以为空");
         return;
       }
       reply(this.reply).then((res) => {
@@ -128,6 +127,8 @@ export default {
           }
           this.list[index].reply.push(r);
           this.$message.success("回复成功");
+          this.isReply[index] = false;
+          this.reply.content = "";
         }
       }).catch((err) => {
         this.$message.error(err.response.data.msg);

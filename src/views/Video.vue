@@ -4,7 +4,7 @@
     <div class="main">
       <div class="content-left">
         <div class="video-player">
-          <w-player :src="videoInfo.video" :vid="vid"></w-player>
+          <w-player v-if="showPlayer" :src="videoInfo.video" :vid="vid" :type="videoInfo.video_type"></w-player>
           <div class="video-title-box">
             <p class="video-title">{{ videoInfo.title }}</p>
             <p v-show="videoInfo.original" class="copyright"><a-icon style="color:#fd6d6f" type="stop" />未经作者授权，禁止转载</p>
@@ -91,6 +91,7 @@ import { utcToBeijing } from "@/utils/time.js";
 export default {
   data() {
     return {
+      showPlayer:false,
       vid: 0,
       authorID:0,
       videoInfo: [],
@@ -116,6 +117,7 @@ export default {
           this.authorID = temp.author.uid;
           this.data = temp.data;
           this.loading = false;
+          this.showPlayer=true;
         }
       }).catch((err) => {
         this.$message.error(err.response.data.msg);
@@ -290,6 +292,7 @@ export default {
   bottom: 0;
   position: fixed;
   overflow-y: scroll;
+  user-select: none;
 }
 
 .main {

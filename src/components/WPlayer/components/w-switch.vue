@@ -43,7 +43,7 @@ export default {
 
 .switch-btn {
   position: absolute;
-  top: -2px;
+  top: -1px;
   left:-3px;
   width: 24px;
   height: 24px;

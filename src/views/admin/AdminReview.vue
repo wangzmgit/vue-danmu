@@ -16,17 +16,15 @@
         {{record.original | toOriginal}}
       </span>
       <span class="operate" slot="action" slot-scope="record">
-        <a @click="viewVideo(record.video)">查看视频</a>
+        <a @click="viewVideo(record.video,record.video_type)">查看视频</a>
         <a @click="_review(record.vid,2000)">通过</a>
         <a @click="showReviewModal(record.vid)">不通过</a>
       </span>
     </a-table>
-    <a-modal v-model="visible" title="查看视频">
-      <video width="480px" :src="src" preload="auto" controls/>
-      <template slot="footer">
-        <a-button type="primary" @click="visible = false">关闭</a-button>
-      </template>
-    </a-modal>
+    <div class="review-video" v-show="visible" title="查看视频">
+      <video id="reviewPlayer" preload="auto" controls/>
+      <a-button type="primary" @click="close()">关闭</a-button>
+    </div>
     <a-modal v-model="reviewVisible">
       <a-form-model-item label="原因">
         <a-select class="reason" v-model="selectStatus">
@@ -92,6 +90,7 @@ const columns = [
     width:"200px",
   },
 ];
+import Hls from "hls.js";
 import { utcToBeijing } from "@/utils/time.js";
 import { getReviewList,review } from "@/api/admin.js";
 export default {
@@ -99,7 +98,7 @@ export default {
     return {
       columns,
       data: [],
-      src:"",//视频地址
+      hls:null,
       visible:false,//显示对话框
       reviewVisible:false,//审核对话框
       selectStatus:"",//选择的状态码
@@ -129,9 +128,27 @@ export default {
       });
     },
     //查看视频
-    viewVideo(src){
-      this.src = src;
+    viewVideo(src,type){
       this.visible = true;
+      let player = document.getElementById("reviewPlayer");
+      if(type == "hls"){
+        this.hls = new Hls();
+        this.hls.loadSource(src);
+        this.hls.attachMedia(player);
+        this.hls.on(Hls.Events.ERROR, () => {
+          console.log('加载失败');
+        });
+      }else{
+        player.src = src;
+      }  
+    },
+    close(){
+      if(this.hls != null){
+        this.hls.stopLoad();
+        this.hls.destroy();
+        this.hls = null;
+      }
+      this.visible = false;
     },
     //切换页面
     pageChange(pagination) {
@@ -186,5 +203,28 @@ export default {
 
 .reason{
   width: 100%;
+}
+
+.review-video{
+  width: 520px;
+  background: rgb(238, 238, 238);
+  width: 520px;
+  height: 336px;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  z-index: 10;
+  margin: -200px 0 0 -260px;
+}
+
+.review-video>video{
+  width: 480px;
+  height: 270px;
+  margin: 10px 20px 0 20px;
+}
+
+.review-video>button{
+  float: right;
+  margin: 10px 20px;
 }
 </style>

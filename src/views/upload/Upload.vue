@@ -53,7 +53,8 @@
       </div>
       <!--审核状态-->
       <div class="upload-center" v-else-if="current == 2">
-        <a-result v-if="status == 1000" title="等待审核中..."></a-result>
+        <a-result v-if="status == 800" title="视频处理中..."></a-result>
+        <a-result v-else-if="status == 1000" title="等待审核中..."></a-result>
         <a-result v-else-if="status == 5001 || status == 5002" title="修改申请已通过">
           <template #extra>
             <a-button type="primary" @click="updateVideo()">前往修改</a-button>
@@ -141,8 +142,8 @@ export default {
       const status = info.file.status;
       if (status === "done") {
         this.current = 2;
-        this.status = 1000;
-        this.$message.success("视频上传成功");
+        this.status = 800;
+        this.$message.success("视频处理中");
       } else if (status === "error") {
         this.$message.error("文件上传失败");
         this.$router.push({ name: "500" });
@@ -192,7 +193,7 @@ export default {
             case 500:
               this.current = 1;
               break;
-            case 1000:case 4001:case 4002:case 5001:case 5002:
+            case 1000:case 800:case 4001:case 4002:case 5001:case 5002:
               this.current = 2;
               break;
             case 2000:

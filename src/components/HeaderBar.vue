@@ -18,7 +18,7 @@
         <a-avatar :size="40">登录</a-avatar>
         <a-button type="link" @click="headerRouter('Login')">登录</a-button>
         <a-button type="link" @click="headerRouter('Register')">注册</a-button>
-        <a-button type="primary" icon="to-top" @click="login()">投稿</a-button>
+        <a-button type="primary" icon="to-top" @click="headerRouter('Login')">投稿</a-button>
       </div>
     </div>
   </div>
@@ -62,6 +62,7 @@ export default {
 .header{
   width: 100%;
   height: 60px;
+  min-width: 1200px;
   background-color: #fff;
   -webkit-box-shadow:0px 0px 3px #c8c8c8 ;
   -moz-box-shadow:0px 0px 3px #c8c8c8 ;

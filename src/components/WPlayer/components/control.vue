@@ -261,7 +261,7 @@ export default {
 
 .player-block {
   position: absolute;
-  top: -3px;
+  top: -4px;
   right: -6px;
   width: 12px;
   height: 12px;

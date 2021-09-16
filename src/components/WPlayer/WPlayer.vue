@@ -13,7 +13,6 @@
         ref="video"
         class="player"
         preload="auto"
-        :src="src"
         @canplay="VideoInit()"
         @timeupdate="TimeUpdate()"
         @ended="VideoEnd()"
@@ -33,6 +32,7 @@
 </template>
 
 <script>
+import Hls from "hls.js";
 import { SendDanmakuAPI,GetDanmakuAPI } from "./js/api.js"
 import Control from "./components/control.vue";
 import Danmaku from "./components/danmaku.vue";
@@ -49,9 +49,14 @@ export default {
       type: Number,
       default: null,
     },
+    type: {
+      type: String,
+      default: "mp4",
+    },
   },
   data() {
     return {
+      hls:null,
       msg:"",//消息内容
       amount:0,//弹幕数量
       message: false,  
@@ -70,6 +75,9 @@ export default {
     //更新进度时间
     TimeUpdate() {
       let video = this.$refs.video;
+      if(video == undefined){
+        return;
+      }
       this.currentTime = video.currentTime;
       this.$refs.control.TimeUpdate(
         video.currentTime,
@@ -176,8 +184,26 @@ export default {
       });
     }
   },
+  mounted(){
+    if(this.type == "hls"){
+      this.hls = new Hls();
+      this.hls.loadSource(this.src);
+      this.hls.attachMedia(this.$refs.video);
+      this.hls.on(Hls.Events.ERROR, () => {
+        console.log('加载失败');
+      });
+    }else{
+      this.$refs.video.src = this.src;
+    }
+  },
   created(){
     this.GetDanmaku();
+  },
+  beforeDestroy() {
+    if(this.hls!=null){
+      this.hls.stopLoad();
+      this.hls.destroy();
+    }
   },
   components: {
     control: Control,

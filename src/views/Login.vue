@@ -55,10 +55,14 @@ export default {
       this.$refs[loginForm].validate((valid) => {
         if (valid) {
           login(this.loginForm).then((res) => {
-            //保存token和用户信息
-            this.setToken(res.data.data.token);
-            this.setUserInfo(res.data.data.user);
-            this.$router.push({ name: "Home" });
+            if(res.data.code === 2000){
+              //保存token和用户信息
+              this.setToken(res.data.data.token);
+              this.setUserInfo(res.data.data.user);
+              this.$router.push({ name: "Home" });
+            }else{
+              this.$message.error(res.data.msg);
+            }
           }).catch((err) => {
             this.$message.error(err.response.data.msg);
           });
