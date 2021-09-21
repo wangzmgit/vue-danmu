@@ -1,5 +1,5 @@
 <template>
-  <div class="video" v-title data-title="视频播放">
+  <div class="video" v-title :data-title="`${title}-视频详情`">
     <header-bar></header-bar>
     <div class="main">
       <div class="content-left">
@@ -79,7 +79,8 @@
 </template>
 
 <script>
-import Cookies from 'js-cookie'
+import Cookies from 'js-cookie';
+import config from "@/utils/config.js";
 import HeaderBar from "@/components/HeaderBar.vue";
 import WPlayer from "@/components/WPlayer/WPlayer.vue";
 import CommentList from "@/components/CommentList";
@@ -91,6 +92,7 @@ import { utcToBeijing } from "@/utils/time.js";
 export default {
   data() {
     return {
+      title:config.title,
       showPlayer:false,
       vid: 0,
       authorID:0,

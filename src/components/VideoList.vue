@@ -62,9 +62,9 @@ export default {
 }
 
 .v-card {
-  width: 20%;
-  height: 160px;
-  padding: 8px 5px;
+  width: 19%;
+  height: 150px;
+  margin-left: 1%;
 }
 
 .card {
@@ -101,10 +101,11 @@ export default {
 
 /*屏幕宽度大于1600px时的布局*/
 @media screen and (min-width:1600px) {
-
   .v-card {
-    width: 16%;
-    padding: 8px 8px;
+    height: 190px;
+  }
+  .card>img {
+    height: 170px;
   }
 }
 

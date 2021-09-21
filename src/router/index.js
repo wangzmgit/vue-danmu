@@ -131,6 +131,15 @@ const routes = [{
     component: () =>
         import('../views/admin/Login.vue'),
 },
+/**关于 */
+{
+
+    path: '/about/update',
+    name: 'Update',
+    component: () =>
+        import('../views/about/Update.vue'),
+
+},
 {
     path: '/admin',
     name: 'Admin',

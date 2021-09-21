@@ -4,9 +4,19 @@
 
 [新版后端地址](https://gitee.com/wzmgit/go-danmu)
 
-## 修改api地址
-进入utils文件，修改request下的URL和adminRequest下的AdminURL。
-有域名可以使用域名，没有域名IP:端口。
+## 配置项目
+#### 基本信息配置
+进入src/utils文件夹,打开config.js文件编辑网站基本信息
+```
+const title = "网站标题";
+const email = "网站站长邮箱";
+const url = "后端地址";
+const icp = "icp备案信息";
+```
+#### Logo图片修改
+logo文件位于src/assets/logo.png,替换时将准备好的png文件命名为logo.png并替换。（图片推荐大小为500*85）
+
+图标文件位于public/favicon.ico,替换即可
 
 ## 项目初始化
 ```

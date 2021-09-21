@@ -1,7 +1,8 @@
-import axios from 'axios';
-import Cookies from 'js-cookie';
+import axios from "axios";
+import config from "./config"
+import Cookies from "js-cookie";
 
-const URL = "http://localhost:9000/api/";
+const URL = config.url + "/api/";
 export const CoverUrl = URL + "v1/file/cover"
 export const VideoUrl = URL + "v1/file/video"
 export const AvatarUrl = URL + "v1/file/avatar"

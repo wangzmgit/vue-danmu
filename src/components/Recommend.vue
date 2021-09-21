@@ -55,10 +55,10 @@ export default {
 .card-list {
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-between;
 }
 
 .v-card {
-  display: inline-block;
   width: 24%;
   min-width: 166px;
   padding: 10px 5px 0 5px;
@@ -74,7 +74,7 @@ export default {
   top: 0;
   left: 0;
   width: 100%;
-  height: 122px;
+  height: 124px;
 }
 
 .title{
@@ -125,5 +125,12 @@ export default {
   left: 6px;
   font-size: 12px;
   bottom: 0;
+}
+
+/*屏幕宽度大于1600px时的布局*/
+@media screen and (min-width:1600px) {
+  .cover {
+    height: 144px;
+  }
 }
 </style>
