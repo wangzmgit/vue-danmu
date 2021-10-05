@@ -45,7 +45,11 @@
         <p>优化网站信息配置</p>
       </a-timeline-item>
       <a-timeline-item>
-        <p>2021-9-21 - 未来</p>
+        <p>2021-10-5</p>
+        <p>适配移动端</p>
+      </a-timeline-item>
+      <a-timeline-item>
+        <p>2021-10-5 - 未来</p>
       </a-timeline-item>
     </a-timeline>
   </div>

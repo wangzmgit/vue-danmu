@@ -7,8 +7,11 @@
       <li class="menu-item" @click="ShowVideoInfo()">
         <span>视频信息</span>
       </li>
+      <li class="menu-item" @click="ShowHotKey()">
+        <span>快捷键说明</span>
+      </li>
       <li class="menu-item">
-        <span>版本:0.2.1</span>
+        <span>版本:0.2.2</span>
       </li>
     </ul>
   </div>
@@ -40,6 +43,14 @@ export default {
     },
     ShowVideoInfo(){
       this.$parent.showVideoInfo = true;
+    },
+    //显示快捷键菜单
+    ShowHotKey(){
+      this.$parent.showHotKey = true;
+    },
+    //menu是否开启
+    MenuIsShow(){
+      return this.menu;
     }
   },
 };

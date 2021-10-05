@@ -6,7 +6,7 @@
     <div class="video-info">
       <tr>
         <td>Player version:</td>
-        <td>v0.2.1</td>
+        <td>v0.2.2</td>
       </tr>
       <tr>
         <td>Video resolution:</td>

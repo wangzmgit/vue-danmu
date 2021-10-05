@@ -1,8 +1,8 @@
 <template>
-  <div ref="videoOuterLayer" class="uncheck" @mouseleave="leave()" @mousemove="mousemove()">
-    <div id="video" ref="videoBox" @click="CloseMenu($event)" @contextmenu.prevent="OpenMenu($event)">
-      <!--控制器及快捷键层-->
-      <div></div>
+  <div ref="videoOuterLayer" class="uncheck" @mouseleave="Leave()" @mousemove="MouseMove()">
+    <div id="video" ref="videoBox" @click="CloseMenuOrPlayVideo($event)" @contextmenu.prevent="OpenMenu($event)">
+      <!--快捷键层-->
+      <hot-key v-show="showHotKey"></hot-key>
       <!--视频信息层-->
       <video-info v-if="showVideoInfo"></video-info>
       <context-menu id="menu" ref="menu"></context-menu>
@@ -10,6 +10,7 @@
       <danmaku v-if="showDanmaku" :danmakuList="danmakuList" ref="danmaku"></danmaku>
       <!--Video层-->
       <video
+        id="player"
         ref="video"
         class="player"
         preload="auto"
@@ -33,7 +34,8 @@
 
 <script>
 import Hls from "hls.js";
-import { SendDanmakuAPI,GetDanmakuAPI } from "./js/api.js"
+import { SendDanmakuAPI,GetDanmakuAPI } from "./js/api.js";
+import HotKey from "./components/hot-key.vue";
 import Control from "./components/control.vue";
 import Danmaku from "./components/danmaku.vue";
 import SendDanmaku from "./components/send-danmaku.vue";
@@ -63,6 +65,7 @@ export default {
       control:true,
       showDanmaku: true,  
       showVideoInfo:false,
+      showHotKey:false,
       currentTime:0,
       danmakuList: [],
     };
@@ -145,13 +148,13 @@ export default {
       this.showDanmaku = val;
     },
     //显示/隐藏控制栏
-    leave() {
+    Leave() {
       if (!this.$refs.video.paused) {
         this.$refs.control.ShowMenu("");
         this.control = false;
       }
     },
-    mousemove() {
+    MouseMove() {
       if (!this.control) {
         this.control = true;
         if (!this.$refs.video.paused) {
@@ -169,10 +172,18 @@ export default {
       }
       this.$refs.menu.OpenMenu(e);
     },
-    //关闭右键菜单
-    CloseMenu(e){
-      if(e.target.id != "menu"){
-        this.$refs.menu.CloseMenu();
+    //关闭右键菜单或者控制视频播放
+    CloseMenuOrPlayVideo(e){
+      let id = e.target.id;
+      if(id != "menu"){
+        //如果menu打开就关闭menu，否则进行播放暂停
+        if(this.$refs.menu.MenuIsShow()){
+          this.$refs.menu.CloseMenu();
+        }else{
+          if(id === "danmaku" || id === "player"){
+            this.$refs.control.PlayOrPause();
+          }
+        }
       }
     },
     GetDanmaku(){
@@ -182,7 +193,7 @@ export default {
           this.amount = this.danmakuList.length;
         }
       });
-    }
+    },
   },
   mounted(){
     if(this.type == "hls"){
@@ -210,7 +221,8 @@ export default {
     danmaku: Danmaku,
     "send-danmaku": SendDanmaku,
     "context-menu":ContextMenu,
-    "video-info":VideoInfo
+    "video-info":VideoInfo,
+    "hot-key":HotKey
   },
 };
 </script>

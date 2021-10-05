@@ -191,6 +191,18 @@ export default {
         this.isFull = false;
       }
     },
+    //快进或快退
+    //参数 方向dir(true前进，false后退)
+    //参数 时间n
+    FastForwardOrRewind(dir,n){
+      let dur = this.video.duration;
+      let current = this.$parent.$refs.video.currentTime;
+      if(dir){
+        this.$parent.ChangeVideoProgress(current+n > dur?dur:current+n);
+      }else{
+        this.$parent.ChangeVideoProgress(current-n < 0?0:current-n);
+      }
+    },
     //处理时间格式
     VideoTime(time) {
       var m = parseInt((time % 3600) / 60);
