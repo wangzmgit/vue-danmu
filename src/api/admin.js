@@ -41,6 +41,12 @@ export const getVideoList = (page,page_size) => {
   return request.get('v1/admin/video/list?page='+page+'&page_size='+page_size);
 }
 
+//添加视频
+export const addVideo = ({title,cover,video,introduction}) => {
+  return request.post('v1/admin/video/add',{title,cover,video,introduction});
+}
+
+
 //删除视频
 export const deleteVideo = (id) => {
   return request.post('v1/admin/video/delete',{id});

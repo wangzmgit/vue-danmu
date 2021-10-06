@@ -1,11 +1,9 @@
 <template>
   <div>
-    <a-table
-      rowKey="vid"
-      :columns="columns"
-      :dataSource="data"
-      :pagination="pagination"
-      @change="pageChange">
+    <div class="info-header">
+      <a-button type="primary" @click="showAddVideo()">导入视频</a-button>
+    </div>
+    <a-table rowKey="vid" :columns="columns" :dataSource="data" :pagination="pagination" @change="pageChange">
       <span slot="cover" slot-scope="record">
         <img height="60px" :src="record.cover" />
       </span>
@@ -17,9 +15,31 @@
       </span>
       <span class="operate" slot="action" slot-scope="record">
         <a @click="viewVideo(record.vid)">查看视频</a>
+        <a @click="viewAuthor(record.uid)">作者</a>
         <a @click="_deleteVideo(record.vid)">删除</a>
       </span>
     </a-table>
+    <!--导入视频-->
+    <a-modal v-model="visible" title="发布公告">
+      <a-form-model ref="form" :model="form" :rules="rules" :label-col="{span:4,offset:1}" :wrapper-col="{span:15,offset:1}">
+        <a-form-model-item label="标题" prop="title">
+          <a-input v-model="form.title"></a-input>
+        </a-form-model-item>
+        <a-form-model-item label="封面URL" prop="cover">
+          <a-input v-model="form.cover"></a-input>
+        </a-form-model-item>
+        <a-form-model-item label="视频URL" prop="video">
+          <a-input v-model="form.video"></a-input>
+        </a-form-model-item>
+        <a-form-model-item label="简介">
+          <a-input v-model="form.introduction"></a-input>
+        </a-form-model-item>
+      </a-form-model>
+      <template slot="footer">
+        <a-button @click="visible=false">取消</a-button>
+        <a-button type="primary" @click="addVideoClick('form')">导入</a-button>
+      </template>
+    </a-modal>
   </div>
 </template>
 
@@ -71,7 +91,7 @@ const columns = [
   },
 ];
 import { utcToBeijing } from "@/utils/time.js";
-import { getVideoList,deleteVideo } from "@/api/admin.js";
+import { getVideoList,deleteVideo,addVideo } from "@/api/admin.js";
 export default {
   data() {
     return {
@@ -81,6 +101,18 @@ export default {
         pageSize: 6,
         current: 1,
         total: 0,
+      },
+      visible:false,//显示对话框
+      form:{
+        title:"",
+        cover:"",
+        video:"",
+        introduction:"",
+      },
+      rules: {
+        title: [{ required: true, message: "请输入标题", trigger: "blur" }],
+        cover: [{ required: true, message: "请输入图片链接", trigger: "blur" }],
+        video: [{ required: true, message: "请输入视频链接", trigger: "blur" }],
       },
     };
   },
@@ -101,6 +133,10 @@ export default {
     viewVideo(vid){
       this.$router.push({ name: "Video", params: { vid: vid } });
     },
+    //查看作者
+    viewAuthor(uid){
+      this.$router.push({ name: "User", params: { uid: uid } });
+    },
     //删除视频
     _deleteVideo(id) {
       deleteVideo(id).then((res)=>{
@@ -117,6 +153,30 @@ export default {
       this.pagination = pagination;
       this._getVideoList();
     },
+    showAddVideo(){
+      this.$notification.open({
+        message: '视频导入',
+        description: "目前功能仅可以导入mp4格式的视频，导入前请确保视频和图片可用",
+      });
+      this.visible = true;
+    },
+    //添加视频
+    addVideoClick(form){
+      this.$refs[form].validate((valid) => {
+        if (valid) {
+          addVideo(this.form).then((res) => {
+            if(res.data.code === 2000){
+              this.$message.success("添加成功");
+              this.visible = false;
+            }
+          }).catch((err) => {
+            this.$message.error(err.response.data.msg);
+          });
+        }else {
+          this.$message.error("请检查输入的数据");
+        }
+      });
+    }
   },
   created() {
     this._getVideoList();
@@ -136,5 +196,14 @@ export default {
 <style scoped>
 .operate > a {
   margin-left: 10px;
+}
+
+.info-header{
+  height: 50px;
+}
+
+.info-header>button{
+  margin-top: 8px;
+  width: 100px;
 }
 </style>

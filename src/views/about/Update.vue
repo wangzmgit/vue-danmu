@@ -1,5 +1,5 @@
 <template>
-  <div class="block">
+  <div class="block" v-title data-title="更新记录">
     <div class="update-bg">
       <img src="../../assets/update-bg.jpg" />
     </div>
@@ -49,7 +49,15 @@
         <p>适配移动端</p>
       </a-timeline-item>
       <a-timeline-item>
-        <p>2021-10-5 - 未来</p>
+        <p>2021-10-5 - 2021-10-6</p>
+        <p>单击视频暂停播放和播放器快捷键</p>
+        <p>获取评论api v2版</p>
+        <p>移动端重做评论区</p>
+        <p>管理员导入视频功能</p>
+        <p>优化推荐视频图片显示</p>
+      </a-timeline-item>
+      <a-timeline-item>
+        <p>2021-10-6 - 未来</p>
       </a-timeline-item>
     </a-timeline>
   </div>
@@ -74,5 +82,9 @@
 .block {
   width: 70%;
   margin: 20px auto;
+}
+
+p{
+  user-select: none;
 }
 </style>
