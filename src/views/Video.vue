@@ -60,9 +60,15 @@
               <a-avatar v-else :size="60" icon="user" />
             </div>
             <!--昵称和个签-->
-            <p class="video-author-name" @click="user(videoInfo.author.uid)">{{ videoInfo.author.name }}</p>
-            <p class="video-author-sign">{{ videoInfo.author.sign }}</p>
-            <div class="follow-btn">
+            <div v-if="videoInfo.author.uid">
+              <p class="video-author-name" @click="user(videoInfo.author.uid)">{{ videoInfo.author.name }}</p>
+              <p class="video-author-sign">{{ videoInfo.author.sign }}</p>
+            </div>
+            <div v-else>
+              <p class="video-author-name">用户不存在</p>
+              <p class="video-author-sign">账号可能已经注销</p>             
+            </div>
+            <div class="follow-btn" v-if="videoInfo.author.uid">
               <a-button v-if="!userInfo" disabled size="small">未登录</a-button>
               <a-button v-else-if="!interactive.follow" type="danger" size="small" @click="_follow()">关注</a-button>
               <a-button v-else type="primary" size="small" @click="_unfollow()">已关注</a-button>

@@ -57,7 +57,11 @@
         <p>优化推荐视频图片显示</p>
       </a-timeline-item>
       <a-timeline-item>
-        <p>2021-10-6 - 未来</p>
+        <p>2021-10-20</p>
+        <p>支持OSS自定义域名</p>
+      </a-timeline-item>
+      <a-timeline-item>
+        <p>2021-10-20 - 未来</p>
       </a-timeline-item>
     </a-timeline>
   </div>

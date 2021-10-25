@@ -27,3 +27,8 @@ export const modifyUserInfo = ({name,gender,birthday,sign}) => {
 export const getUserInfoByID = (uid) => {
   return request.get('v1/user/info/other?uid='+uid);
 }
+
+//修改用户密码
+export const modifyPassword = (password,code) => {
+  return request.post('v1/user/password/modify',{ password,code });
+}

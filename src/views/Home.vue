@@ -31,6 +31,8 @@
     </div>
     <footer class="footer">
       <ul>
+        <li v-if="config.mobile"><a :href="config.mobile">移动端</a></li>
+        <li v-if="config.mobile" class="split"></li>
         <li><a href="https://www.showdoc.com.cn/danmu3/7242809630371197" target="_blank">文档</a></li>
         <li class="split"></li>
         <li @click="about('Update')"><a>更新历史</a></li>

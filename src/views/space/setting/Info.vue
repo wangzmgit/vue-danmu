@@ -1,8 +1,5 @@
 <template>
   <div>
-    <div class="setting-title">
-      <p>基本信息修改</p>
-    </div>
     <a-form-model ref="user" :model="userForm" :rules="rules" :label-col="{ span: 4, offset: 1 }" :wrapper-col="{ span: 15, offset: 1 }">
       <div class="avatar-box">
         <p class="avatar-title">头像:</p> 
@@ -137,16 +134,6 @@ export default {
 </script>
 
 <style scoped>
-.setting-title{
-  height: 100px;
-  text-align: center;
-}
-
-.setting-title>p{
-  line-height: 100px;
-  font-size: 20px;
-}
-
 .uid{
   margin: 0;
 }

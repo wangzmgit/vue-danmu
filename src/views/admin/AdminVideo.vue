@@ -155,8 +155,8 @@ export default {
     },
     showAddVideo(){
       this.$notification.open({
-        message: '视频导入',
-        description: "目前功能仅可以导入mp4格式的视频，导入前请确保视频和图片可用",
+        message: '视频导入注意事项',
+        description: "1.目前功能仅可以导入mp4格式的视频，导入前请确保视频和图片可用\n2.导入视频的作者的uid为0，不计算视频点击量。",
       });
       this.visible = true;
     },

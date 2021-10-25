@@ -77,10 +77,10 @@ export default {
             this.text = `${60 - count}秒后获取`;
           }, 1000);
         }
-      }).catch(() => {
+      }).catch((err) => {
         this.disabled = false;
         this.text = "发送验证码";
-        this.$message.error("发送失败");
+        this.$message.error(err.response.data.msg);
       });
     },
     _register(registerFrom) {

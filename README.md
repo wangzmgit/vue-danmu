@@ -11,6 +11,7 @@
 const title = "网站标题";
 const email = "网站站长邮箱";
 const url = "后端地址";
+const mobile = "移动端地址，用于跳转移动端";
 const icp = "icp备案信息";
 ```
 #### Logo图片修改

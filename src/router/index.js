@@ -79,7 +79,24 @@ const routes = [{
             name: 'Setting',
             meta: { auth: true },
             component: () =>
-                import('../views/space/Setting.vue'),
+                import('../views/space/setting/Setting.vue'),
+            redirect: '/space/setting/info',
+            children: [
+                {
+                    path: '/space/setting/info',
+                    name: 'SettingInfo',
+                    meta: { auth: true },
+                    component: () =>
+                        import('../views/space/setting/Info.vue'),
+                },
+                {
+                    path: '/space/setting/security',
+                    name: 'SettingSecurity',
+                    meta: { auth: true },
+                    component: () =>
+                        import('../views/space/setting/Security.vue'),
+                },
+            ]
         },
         {
             path: '/space/following',

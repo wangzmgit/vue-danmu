@@ -46,7 +46,6 @@ export const addVideo = ({title,cover,video,introduction}) => {
   return request.post('v1/admin/video/add',{title,cover,video,introduction});
 }
 
-
 //删除视频
 export const deleteVideo = (id) => {
   return request.post('v1/admin/video/delete',{id});
