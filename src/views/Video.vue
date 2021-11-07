@@ -4,7 +4,7 @@
     <div class="main">
       <div class="content-left">
         <div class="video-player">
-          <w-player v-if="showPlayer" :src="videoInfo.video" :vid="vid" :type="videoInfo.video_type"></w-player>
+          <w-player :key="timer" v-if="showPlayer" :src="currentVideo" :vid="vid" :type="videoInfo.video_type"></w-player>
           <div class="video-title-box">
             <p class="video-title">{{ videoInfo.title }}</p>
             <p v-show="videoInfo.original" class="copyright"><a-icon style="color:#fd6d6f" type="stop" />未经作者授权，禁止转载</p>
@@ -76,8 +76,18 @@
           </div>
         </div>
         <!--相关视频-->
-        <div>
-          <p class="related-title">相关视频</p>
+        <div v-if="sub_video.length">
+          <p class="related-title">视频合集</p>
+          <div class="video-item" @click="setVideo(0)">
+            <span>1P</span>
+            <span>{{ videoInfo.title }}</span>
+          </div>
+          <div v-for="(item, index) in sub_video" :key="index">
+            <div class="video-item" @click="setVideo(index + 1)">
+              <span>{{ index + 2 }}P</span>
+              <span>{{ item.title }}</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -98,6 +108,8 @@ import { utcToBeijing } from "@/utils/time.js";
 export default {
   data() {
     return {
+      timer: "",//刷新播放器
+      currentVideo:"",//当前播放的视频
       title:config.title,
       showPlayer:false,
       vid: 0,
@@ -107,6 +119,7 @@ export default {
         like_count:0,
         collect_count:0,
       },
+      sub_video:[],//子视频
       count:0,//评论总数
       page:1,//评论页码
       comments:[],//评论列表
@@ -124,6 +137,8 @@ export default {
           this.videoInfo = temp;
           this.authorID = temp.author.uid;
           this.data = temp.data;
+          this.currentVideo = temp.video;
+          this.sub_video = temp.sub_video;
           this.loading = false;
           this.showPlayer=true;
         }
@@ -245,6 +260,26 @@ export default {
       this.page = current;
       this._getCommentList();
     },
+    //设置播放的视频
+    setVideo(index){
+      if(index === 0){
+        //播放主视频
+        if(this.currentVideo === this.videoInfo.video){
+          return;
+        }
+        //切换
+        this.vid = Number(this.$route.params.vid);
+        this.currentVideo = this.videoInfo.video;
+        this.timer = new Date().getTime();
+      }else{
+        if(this.currentVideo === this.sub_video[index-1].video){
+          return;
+        }
+        this.vid = this.sub_video[index-1].vid;
+        this.currentVideo = this.sub_video[index-1].video;
+        this.timer = new Date().getTime();
+      }
+    }
   },
   computed: {
     userInfo() {
@@ -484,6 +519,19 @@ export default {
   font-size: 18px;
 }
 
+.video-item{
+  height: 30px;
+  margin-top: 6px;
+  cursor: pointer;
+  border-radius: 10px;
+  border: 1px solid #808080;
+}
+
+.video-item > span{
+  font-size: 16px;
+  line-height: 30px;
+  padding-left: 10px;
+}
 
 /*屏幕宽度大于1600px时的布局*/
 @media screen and (min-width:1600px) {

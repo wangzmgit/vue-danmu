@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="follow-list" :style="`height:${height}px`">
     <div v-for="(item, index) in list" :key="index">
       <div class="follow-card">
         <!--头像-->
@@ -28,6 +28,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    height: {
+      type: Number,
+      default: 600
+    }
   },
   data() {
     return {};
@@ -51,6 +55,10 @@ export default {
 </script>
 
 <style scoped>
+.follow-list{
+  overflow-y: scroll;
+}
+
 .follow-card {
   height: 70px;
   position: relative;

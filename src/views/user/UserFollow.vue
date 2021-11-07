@@ -1,6 +1,6 @@
 <template>
   <div>
-    <follow :list="list" :following="false"></follow>
+    <follow :list="list" :following="false" :height="400"></follow>
   </div>
 </template>
 <script>

@@ -61,7 +61,14 @@
         <p>支持OSS自定义域名</p>
       </a-timeline-item>
       <a-timeline-item>
-        <p>2021-10-20 - 未来</p>
+        <p>2021-10-20 - 2021-10-25</p>
+        <p>支持密码修改</p>
+      </a-timeline-item>
+      <a-timeline-item>
+        <p>2021-10-25 - 未来</p>
+        <p>antd按需引用</p>
+        <p>视频合集</p>
+        <p>修复关注和粉丝列表显示问题</p>
       </a-timeline-item>
     </a-timeline>
   </div>

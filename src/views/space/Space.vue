@@ -99,5 +99,6 @@ export default {
 .space-router{
   width: 870px;
   margin-left: 20px;
+  height: 700px;
 }
 </style>

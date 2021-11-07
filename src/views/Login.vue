@@ -17,10 +17,10 @@
             <a-input v-model="loginForm.email" />
           </a-form-model-item>
           <a-form-model-item ref="password" label="密码" prop="password">
-            <a-input v-model="loginForm.password" type="password" />
+            <a-input v-model="loginForm.password" type="password" @keydown.enter="loginRequest()"/>
           </a-form-model-item>
           <div>
-            <a-button class="card-btn" type="primary" @click="_login('loginForm')">登录</a-button>
+            <a-button class="card-btn" type="primary" @click="loginRequest()">登录</a-button>
             <a-button class="card-btn" @click="goRegister()">注册</a-button>
           </div>
         </a-form-model>
@@ -51,8 +51,8 @@ export default {
   methods:{
     ...mapActions(["setToken"]),
     ...mapActions(["setUserInfo"]),
-    _login(loginForm) {
-      this.$refs[loginForm].validate((valid) => {
+    loginRequest() {
+      this.$refs.loginForm.validate((valid) => {
         if (valid) {
           login(this.loginForm).then((res) => {
             if(res.data.code === 2000){
