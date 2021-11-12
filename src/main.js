@@ -26,7 +26,8 @@ import {
     Result,
     Table,
     Select,
-    Progress
+    Progress,
+    Timeline
   } from "ant-design-vue";
 
 Vue.use(Menu);
@@ -59,10 +60,10 @@ Vue.component(Result.name, Result);
 Vue.component(Table.name, Table);
 Vue.component(Select.name, Select);
 Vue.component(Progress.name, Progress);
+Vue.component(Timeline.name, Timeline);
+Vue.component(Timeline.Item.name, Timeline.Item);
 
 Vue.config.productionTip = false;
-
-//Vue.use(Antd);
 
 Vue.directive('title', {
     inserted: function (el) {
