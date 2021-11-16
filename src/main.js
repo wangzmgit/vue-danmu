@@ -59,6 +59,7 @@ Vue.component(Skeleton.name, Skeleton);
 Vue.component(Result.name, Result);
 Vue.component(Table.name, Table);
 Vue.component(Select.name, Select);
+Vue.component(Select.Option.name, Select.Option);
 Vue.component(Progress.name, Progress);
 Vue.component(Timeline.name, Timeline);
 Vue.component(Timeline.Item.name, Timeline.Item);
