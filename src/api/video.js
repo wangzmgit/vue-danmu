@@ -55,8 +55,3 @@ export const recommendVideo = () => {
 export const getVideoList = (page,page_size) => {
   return request.get('v1/video/list/get?page=' + page + '&page_size=' + page_size);
 }
-
-//获取子视频列表
-export const getSubVideoList = (page,page_size,parent_id) => {
-  return request.get('v1/video/upload/sub/get?page=' + page + '&page_size=' + page_size + '&parent_id=' + parent_id);
-}

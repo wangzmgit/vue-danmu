@@ -24,12 +24,13 @@
         <a-switch v-model="$parent.upload.original" />
       </a-form-model-item>
       <div class="upload-next-btn">
-        <a-button v-if="$parent.status == 0" type="primary" @click="uploadInfo(false)">下一步</a-button>
-        <div v-else>
+        <a-button v-if="$parent.status == 0" type="primary" @click="uploadInfo()">下一步</a-button>
+        <a-button v-else type="primary" @click="updateInfo()">修改</a-button>
+        <!--<div v-else>
           <a-button @click="$parent.current = 1">编辑子视频</a-button>
           <a-button @click="uploadInfo(true)">上传合集</a-button>
-          <a-button type="primary" @click="updateInfo()">修改</a-button>
-        </div>
+          
+        </div>-->
       </div>
     </a-form-model>
   </div>
@@ -82,16 +83,9 @@ export default {
         this.$message.error("文件上传失败");
       }
     },
-    uploadInfo(subVideo) {
+    uploadInfo() {
       this.$refs.upload.validate((valid) => {
         if (valid) {
-          if (subVideo) {
-            if (this.$route.params.vid) {
-              this.$parent.upload.parent = Number(this.$route.params.vid);
-            } else {
-              this.$message.error("所属的视频不存在");
-            }
-          }
           uploadVideoInfo(this.$parent.upload).then((res) => {
             this.$parent.upload.vid = res.data.data.vid;
             this.$parent.current = 1;

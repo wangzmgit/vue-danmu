@@ -76,18 +76,8 @@
           </div>
         </div>
         <!--相关视频-->
-        <div v-if="sub_video.length">
+        <div>
           <p class="related-title">视频合集</p>
-          <div class="video-item" @click="setVideo(0)">
-            <span>1P</span>
-            <span>{{ videoInfo.title }}</span>
-          </div>
-          <div v-for="(item, index) in sub_video" :key="index">
-            <div class="video-item" @click="setVideo(index + 1)">
-              <span>{{ index + 2 }}P</span>
-              <span>{{ item.title }}</span>
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -119,7 +109,7 @@ export default {
         like_count:0,
         collect_count:0,
       },
-      sub_video:[],//子视频
+      //sub_video:[],//子视频
       count:0,//评论总数
       page:1,//评论页码
       comments:[],//评论列表
@@ -138,7 +128,6 @@ export default {
           this.authorID = temp.author.uid;
           this.data = temp.data;
           this.currentVideo = temp.video;
-          this.sub_video = temp.sub_video;
           this.loading = false;
           this.showPlayer=true;
         }
@@ -260,26 +249,6 @@ export default {
       this.page = current;
       this._getCommentList();
     },
-    //设置播放的视频
-    setVideo(index){
-      if(index === 0){
-        //播放主视频
-        if(this.currentVideo === this.videoInfo.video){
-          return;
-        }
-        //切换
-        this.vid = Number(this.$route.params.vid);
-        this.currentVideo = this.videoInfo.video;
-        this.timer = new Date().getTime();
-      }else{
-        if(this.currentVideo === this.sub_video[index-1].video){
-          return;
-        }
-        this.vid = this.sub_video[index-1].vid;
-        this.currentVideo = this.sub_video[index-1].video;
-        this.timer = new Date().getTime();
-      }
-    }
   },
   computed: {
     userInfo() {

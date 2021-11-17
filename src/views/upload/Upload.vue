@@ -53,7 +53,6 @@ export default {
         video: "",
         introduction: "",
         original:true,
-        parent:0,//是否为子视频
       },
       status: 0, //状态码
       remarks: "", //审核结果备注
