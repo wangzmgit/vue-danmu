@@ -5,6 +5,11 @@ export const createCollection = ({ title, cover, desc }) => {
     return request.post('v1/collection/create', { title, cover, desc });
 }
 
+//修改合集
+export const modifyCollection = ({ id, title, cover, desc }) => {
+    return request.post('v1/collection/modify', { id, title, cover, desc });
+}
+
 //获取用户创建合集列表
 export const getCreateCollectionList = (page, page_size) => {
     return request.get('v1/collection/create/list?page=' + page + '&page_size=' + page_size);

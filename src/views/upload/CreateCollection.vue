@@ -22,7 +22,8 @@
         <a-input v-model="upload.desc" :autosize="{ minRows: 4, maxRows: 4 }" :maxLength="100" placeholder="请输入合集简介，0-100个字符" type="textarea"/>
       </a-form-model-item>
       <div class="upload-next-btn">
-        <a-button type="primary" @click="createCollectionClick()">{{title}}</a-button>
+        <a-button v-if="create" type="primary" @click="createCollectionClick()">创建</a-button>
+        <a-button v-else type="primary" @click="modifyCollectionClick()">修改</a-button>
       </div>
     </a-form-model>
   </div>
@@ -31,10 +32,11 @@
 <script>
 import Cookies from "js-cookie";
 import { CoverUrl } from "@/utils/request.js";
-import { createCollection,getCollectionByID } from "@/api/collection.js";
+import { createCollection, getCollectionByID, modifyCollection } from "@/api/collection.js";
 export default {
   data() {
     return {
+      create: true,//是否是创建
       title:"创建",
       upload: {
         id: 0,
@@ -90,6 +92,22 @@ export default {
         }
       });
     },
+    //修改合集信息
+    modifyCollectionClick(){
+      this.$refs.upload.validate((valid) => {
+        if (valid) {
+          modifyCollection(this.upload).then((res) => {
+            if(res.data.code === 2000){
+              this.$router.push({ name: "ViewCollection" });
+            }
+          }).catch((err) => {
+            this.$message.error(err.response.data.msg);
+          });
+        } else {
+          this.$message.error("请检查输入的数据");
+        }
+      });
+    },
     getCollection(){
       getCollectionByID(this.upload.id).then((res)=>{
         if(res.data.code === 2000){
@@ -104,6 +122,7 @@ export default {
     //如果说带有id参数的话，则为编辑信息
     if (this.$route.params.id) {
       this.title = "编辑";
+      this.create = false;
       this.upload.id = this.$route.params.id;
       this.getCollection();
     }
