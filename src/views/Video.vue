@@ -4,7 +4,7 @@
     <div class="main">
       <div class="content-left">
         <div class="video-player">
-          <w-player :key="timer" v-if="showPlayer" :src="currentVideo" :vid="vid" :type="videoInfo.video_type"></w-player>
+          <w-player v-if="showPlayer" :src="videoInfo.video" :vid="vid" :type="videoInfo.video_type"></w-player>
           <div class="video-title-box">
             <p class="video-title">{{ videoInfo.title }}</p>
             <p v-show="videoInfo.original" class="copyright"><a-icon style="color:#fd6d6f" type="stop" />未经作者授权，禁止转载</p>
@@ -75,10 +75,6 @@
             </div>
           </div>
         </div>
-        <!--相关视频-->
-        <div>
-          <p class="related-title">视频合集</p>
-        </div>
       </div>
     </div>
   </div>
@@ -98,8 +94,6 @@ import { utcToBeijing } from "@/utils/time.js";
 export default {
   data() {
     return {
-      timer: "",//刷新播放器
-      currentVideo:"",//当前播放的视频
       title:config.title,
       showPlayer:false,
       vid: 0,
@@ -109,7 +103,6 @@ export default {
         like_count:0,
         collect_count:0,
       },
-      //sub_video:[],//子视频
       count:0,//评论总数
       page:1,//评论页码
       comments:[],//评论列表
@@ -127,7 +120,6 @@ export default {
           this.videoInfo = temp;
           this.authorID = temp.author.uid;
           this.data = temp.data;
-          this.currentVideo = temp.video;
           this.loading = false;
           this.showPlayer=true;
         }
@@ -481,25 +473,6 @@ export default {
   position: absolute;
   right: 20px;
   top: 33px;
-}
-
-.related-title{
-  margin-top: 20px;
-  font-size: 18px;
-}
-
-.video-item{
-  height: 30px;
-  margin-top: 6px;
-  cursor: pointer;
-  border-radius: 10px;
-  border: 1px solid #808080;
-}
-
-.video-item > span{
-  font-size: 16px;
-  line-height: 30px;
-  padding-left: 10px;
 }
 
 /*屏幕宽度大于1600px时的布局*/

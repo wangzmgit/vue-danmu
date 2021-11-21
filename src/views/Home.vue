@@ -28,6 +28,17 @@
       <div class="home-main">
         <video-list ref="child"></video-list>
       </div>
+      <!-- 合集列表 -->
+      <div class="transition">
+        <div>
+          <img src="../assets/collection.svg" />
+          <span>视频合集</span>
+        </div>
+        <a-button @click="moreCollection()">加载更多<a-icon type="right" /> </a-button>
+      </div>
+      <div class="home-main">
+        <collection-list ref="collection"></collection-list>
+      </div>
     </div>
     <footer class="footer">
       <ul>
@@ -54,6 +65,7 @@ import { getCarousel } from "@/api/carousel.js";
 import HeaderBar from "@/components/HeaderBar.vue";
 import Recommend from "@/components/Recommend.vue";
 import VideoList from "@/components/VideoList.vue";
+import CollectionList from "@/components/CollectionList.vue";
 export default {
   data() {
     return {
@@ -79,6 +91,9 @@ export default {
     },
     about(name){
       this.$router.push({ name: name });
+    },
+    moreCollection(){
+      this.$refs.collection.getMore();
     }
   },
   created() {
@@ -88,6 +103,7 @@ export default {
     "header-bar": HeaderBar,
     recommend: Recommend,
     "video-list": VideoList,
+    "collection-list": CollectionList
   },
 };
 </script>
