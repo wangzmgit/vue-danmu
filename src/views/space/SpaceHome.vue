@@ -149,7 +149,7 @@ export default {
       this.$router.push({ name: "Video", params: { vid: vid } });
     },
     viewStatus(vid) {
-      this.$router.push({ name: "Upload", params: { vid: vid } });
+      this.$router.push({ name: "UploadVideoHome", params: { vid: vid } });
     },
     goFollow(path) {
       this.$router.push({ name: path });
