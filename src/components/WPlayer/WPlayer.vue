@@ -194,7 +194,7 @@ export default {
         }
       });
     },
-    BlobVideo(url, cb) {
+    /*BlobVideo(url, cb) {
       const xhr = new XMLHttpRequest();
       xhr.open("get", url);
       xhr.responseType = "blob";
@@ -202,7 +202,7 @@ export default {
         cb(xhr.response);
       };
       xhr.send();
-    }
+    }*/
   },
   mounted(){
     if(this.type == "hls"){
@@ -213,11 +213,12 @@ export default {
         console.log('加载失败');
       });
     }else{
-      this.BlobVideo(this.src, function(res){
+      /*this.BlobVideo(this.src, function(res){
         const src = URL.createObjectURL(res); 
         let video = document.getElementById("player")
         video.src = src;
-      })
+      })*/
+      this.$refs.video.src = this.src;
     }
   },
   created(){
