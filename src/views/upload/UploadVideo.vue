@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import Cookies from "js-cookie";
+import storage from "@/utils/stored-data.js";
 import { VideoUrl } from "@/utils/request.js";
 export default {
   data() {
@@ -27,7 +27,7 @@ export default {
       uploadingVideo: false, //视频上传中
       upload: this.$parent.upload,
       headers: {
-        Authorization: "Bearer " + Cookies.get("token"),
+        Authorization: "Bearer " + storage.get("token"),
       },
     };
   },

@@ -22,7 +22,7 @@
 
 <script>
 import { login } from "@/api/admin";
-import Cookies from "js-cookie";
+import storage from "@/utils/stored-data.js";
 export default {
   data() {
     return {
@@ -45,7 +45,7 @@ export default {
         if (valid) {
           login(this.loginForm).then((res) => {
             //保存token并设置1天过期
-            Cookies.set("admin", res.data.data.token,{expires:1});
+            storage.set("admin", res.data.data.token,24 * 60);
             this.$router.push({ name: "Admin" });
           }).catch((err) => {
             this.$message.error(err.response.data.msg);
@@ -55,11 +55,6 @@ export default {
         }
       });
     },
-  },
-  created() {
-    if (!Cookies.get('admin')) {
-      this.$router.push({ name: "AdminLogin" });
-    }
   },
 };
 </script>

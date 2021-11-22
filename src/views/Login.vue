@@ -30,8 +30,8 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
 import { login } from "@/api/user";
+import storage from "@/utils/stored-data.js";
 export default {
   data() {
     return {
@@ -49,16 +49,15 @@ export default {
     };
   },
   methods:{
-    ...mapActions(["setToken"]),
-    ...mapActions(["setUserInfo"]),
+
     loginRequest() {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
           login(this.loginForm).then((res) => {
             if(res.data.code === 2000){
-              //保存token和用户信息
-              this.setToken(res.data.data.token);
-              this.setUserInfo(res.data.data.user);
+              //保存token和用户信息，并设置两周过期
+              storage.set("token", res.data.data.token, 14 * 24 * 60);
+              storage.set('userInfo',res.data.data.user, 14 * 24 * 60)
               this.$router.push({ name: "Home" });
             }else{
               this.$message.error(res.data.msg);

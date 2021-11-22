@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import Cookies from "js-cookie";
+import storage from "@/utils/stored-data.js";
 import { CoverUrl } from "@/utils/request.js";
 import { createCollection, getCollectionByID, modifyCollection } from "@/api/collection.js";
 export default {
@@ -47,7 +47,7 @@ export default {
       uploadCover: CoverUrl,
       coverDisabled: false, //上传封面是否禁用
       headers: {
-        Authorization: "Bearer " + Cookies.get("token"),
+        Authorization: "Bearer " + storage.get("token"),
       },
       rules: {
         title: [{ required: true, message: "请输入视频标题", trigger: "blur" }],

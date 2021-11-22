@@ -74,8 +74,8 @@ const columns = [
     align: "center",
   },
 ];
-import Cookies from "js-cookie";
-import { CarouselUrl } from "@/utils/adminRequest.js";
+import storage from "@/utils/stored-data.js";
+import { CarouselUrl } from "@/utils/admin-request.js";
 import { utcToBeijing } from "@/utils/time.js";
 import { getCarousel,addCarousel,deleteCarousel } from "@/api/admin.js";
 export default {
@@ -90,7 +90,7 @@ export default {
       },
       upload: CarouselUrl,
       headers: {
-        Authorization: "Bearer " + Cookies.get("token"),
+        Authorization: "Bearer " + storage.get("token"),
       },
     };
   },

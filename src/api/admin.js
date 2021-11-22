@@ -1,4 +1,4 @@
-import request from '@/utils/adminRequest';
+import request from '@/utils/admin-request';
 
 //登录
 export const login = ({email,password}) => {

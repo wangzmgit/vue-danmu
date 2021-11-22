@@ -81,8 +81,8 @@
 </template>
 
 <script>
-import Cookies from 'js-cookie';
 import config from "@/utils/config.js";
+import storage from "@/utils/stored-data.js";
 import HeaderBar from "@/components/HeaderBar.vue";
 import WPlayer from "@/components/WPlayer/WPlayer.vue";
 import CommentList from "@/components/CommentList";
@@ -244,11 +244,7 @@ export default {
   },
   computed: {
     userInfo() {
-      if (Cookies.get('userInfo')) {
-        return JSON.parse(Cookies.get('userInfo'));
-      } else {
-        return null;
-      }
+      return storage.get('userInfo');
     }
   },
   watch: {

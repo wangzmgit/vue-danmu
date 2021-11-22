@@ -40,9 +40,9 @@
 </template>
 
 <script>
-import Cookies from "js-cookie";
 import Moment from "moment";
 import { mapActions } from "vuex";
+import storage from "@/utils/stored-data.js";
 import { AvatarUrl } from "@/utils/request.js";
 import { getUserInfo,modifyUserInfo } from "@/api/user.js"
 export default {
@@ -57,18 +57,14 @@ export default {
         birthday: null,
       },
       headers: {
-        Authorization: "Bearer " + Cookies.get("token"),
+        Authorization: "Bearer " + storage.get("token"),
       },
       rules: {name: [{ required: true, message: "请输入昵称", trigger: "blur" }],},
     };
   },
   computed: {
     userInfo() {
-      if (Cookies.get("userInfo")) {
-        return JSON.parse(Cookies.get("userInfo"));
-      } else {
-        return null;
-      }
+      return storage.get("userInfo");
     },
   },
   methods: {

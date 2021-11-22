@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import Cookies from "js-cookie";
+import storage from "@/utils/stored-data.js"
 export default {
   data(){
     return{
@@ -34,11 +34,7 @@ export default {
   },
   computed: {
     userInfo() {
-      if (Cookies.get("userInfo")) {
-        return JSON.parse(Cookies.get("userInfo"));
-      } else {
-        return null;
-      }
+      return storage.get("userInfo");
     },
   },
   methods:{
@@ -47,8 +43,8 @@ export default {
     },
     logout() {
       //清除token和用户信息并刷新页面
-      Cookies.remove('token');
-      Cookies.remove('userInfo');
+      storage.remove('token');
+      storage.remove('userInfo');
       this.$router.go(0);
     },
     search(){

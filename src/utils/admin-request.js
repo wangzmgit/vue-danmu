@@ -1,6 +1,6 @@
 import axios from 'axios';
 import config from "./config"
-import Cookies from 'js-cookie';
+import storage from "@/utils/stored-data.js"
 
 const AdminURL = config.url + "/api/";
 export const CarouselUrl = AdminURL + "v1/admin/carousel/upload/img"
@@ -12,7 +12,7 @@ const service = axios.create({
 });
 
 service.interceptors.request.use((config) => {
-    Object.assign(config.headers, { Authorization: `Bearer ${Cookies.get('admin')}` });
+    Object.assign(config.headers, { Authorization: `Bearer ${storage.get('admin')}` });
     return config;
 }), (error) => {
     return Promise.reject(error);

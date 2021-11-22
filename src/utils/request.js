@@ -1,11 +1,11 @@
 import axios from "axios";
-import config from "./config"
-import Cookies from "js-cookie";
+import config from "./config";
+import storage from "@/utils/stored-data.js";
 
 const URL = config.url + "/api/";
-export const CoverUrl = URL + "v1/file/cover"
-export const VideoUrl = URL + "v1/file/video"
-export const AvatarUrl = URL + "v1/file/avatar"
+export const CoverUrl = URL + "v1/file/cover";
+export const VideoUrl = URL + "v1/file/video";
+export const AvatarUrl = URL + "v1/file/avatar";
 
 const service = axios.create({
     baseURL: URL,
@@ -14,7 +14,7 @@ const service = axios.create({
 });
 
 service.interceptors.request.use((config) => {
-    Object.assign(config.headers, { Authorization: `Bearer ${Cookies.get('token')}` });
+    Object.assign(config.headers, { Authorization: `Bearer ${storage.get('token')}` });
     return config;
 }), (error) => {
     return Promise.reject(error);

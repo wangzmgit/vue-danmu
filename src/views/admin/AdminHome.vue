@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import Cookies from 'js-cookie'
+import storage from "@/utils/stored-data.js";
 export default {
   data() {
     return {};
@@ -67,7 +67,7 @@ export default {
     },
   },
   created(){
-    if (!Cookies.get('admin')) {
+    if (!storage.get('admin')) {
       this.$router.push({ name: "AdminLogin" });
     }
   }

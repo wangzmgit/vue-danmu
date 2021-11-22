@@ -39,9 +39,9 @@
 </template>
 
 <script>
-import Cookies from "js-cookie";
 import { sendToMyself } from "@/api/code";
 import { modifyPassword } from "@/api/user";
+import storage from "@/utils/stored-data.js";
 export default {
   data() {
     return {
@@ -54,11 +54,7 @@ export default {
   },
   computed: {
     userInfo() {
-      if (Cookies.get("userInfo")) {
-        return JSON.parse(Cookies.get("userInfo"));
-      } else {
-        return null;
-      }
+      return storage.get("userInfo");
     },
   },
   methods: {

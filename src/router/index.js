@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
-import Cookies from "js-cookie";
+import storage from "@/utils/stored-data.js"
 
 Vue.use(VueRouter)
 
@@ -287,7 +287,7 @@ router.beforeEach((to, from, next) => {
     //是否需要登录
     if (to.meta.auth) {
         //是否存在token
-        if (Cookies.get('token')) {
+        if (storage.get('token')) {
             next();
         } else {
             router.push({ name: 'Login' });

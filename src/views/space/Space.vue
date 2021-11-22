@@ -18,16 +18,12 @@
 </template>
 
 <script>
-import Cookies from "js-cookie";
+import storage from "@/utils/stored-data.js";
 import HeaderBar from "@/components/HeaderBar.vue";
 export default {
   computed: {
     userInfo() {
-      if (Cookies.get("userInfo")) {
-        return JSON.parse(Cookies.get("userInfo"));
-      } else {
-        return null;
-      }
+      return storage.get("userInfo");
     },
   },
   methods: {

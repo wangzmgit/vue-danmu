@@ -67,8 +67,9 @@
     </a-modal>
   </div>
 </template>
+
 <script>
-import Cookies from "js-cookie";
+import storage from "@/utils/stored-data.js";
 import { getFollowData } from "@/api/follow.js";
 import { getMyVideo, deleteVideo, videoUpdateRequest } from "@/api/video.js";
 export default {
@@ -87,11 +88,7 @@ export default {
   },
   computed: {
     userInfo() {
-      if (Cookies.get("userInfo")) {
-        return JSON.parse(Cookies.get("userInfo"));
-      } else {
-        return null;
-      }
+      return storage.get("userInfo");
     },
   },
   methods: {

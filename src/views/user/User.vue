@@ -39,10 +39,11 @@
 </template>
 
 <script>
-import Cookies from "js-cookie";
-import { follow, unfollow, getFollowStatus } from "@/api/follow.js";
+import storage from "@/utils/stored-data.js";
 import { getUserInfoByID } from "@/api/user.js";
 import HeaderBar from "@/components/HeaderBar.vue";
+import { follow, unfollow, getFollowStatus } from "@/api/follow.js";
+
 export default {
   data() {
     return {
@@ -54,11 +55,7 @@ export default {
   },
   computed: {
     userInfo() {
-      if (Cookies.get("userInfo")) {
-        return JSON.parse(Cookies.get("userInfo"));
-      } else {
-        return null;
-      }
+      return storage.get("userInfo");
     },
     key() {
       //解决router-view 复用组件时不刷新的问题

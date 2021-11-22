@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import Cookies from "js-cookie";
+import storage from "@/utils/stored-data.js"
 import { utcToBeijing } from "@/utils/time.js";
 import { deleteComment,reply,deleteReply } from "@/api/comment";
 export default {
@@ -88,8 +88,8 @@ export default {
   },
   computed: {
     userInfo() {
-      if (Cookies.get("userInfo")) {
-        return JSON.parse(Cookies.get("userInfo"));
+      if (storage.get("userInfo")) {
+        return storage.get("userInfo");
       } else {
         return {"uid":0};
       }
