@@ -194,6 +194,15 @@ export default {
         }
       });
     },
+    BlobVideo(url, cb) {
+      const xhr = new XMLHttpRequest();
+      xhr.open("get", url);
+      xhr.responseType = "blob";
+      xhr.onload = function() {
+        cb(xhr.response);
+      };
+      xhr.send();
+    }
   },
   mounted(){
     if(this.type == "hls"){
@@ -204,7 +213,11 @@ export default {
         console.log('加载失败');
       });
     }else{
-      this.$refs.video.src = this.src;
+      this.BlobVideo(this.src, function(res){
+        const src = URL.createObjectURL(res); 
+        let video = document.getElementById("player")
+        video.src = src;
+      })
     }
   },
   created(){
