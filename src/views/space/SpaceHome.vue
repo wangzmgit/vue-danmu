@@ -71,7 +71,8 @@
 <script>
 import storage from "@/utils/stored-data.js";
 import { getFollowData } from "@/api/follow.js";
-import { getMyVideo, deleteVideo, videoUpdateRequest } from "@/api/video.js";
+import { getMyVideo, deleteVideo } from "@/api/video.js";
+//videoUpdateRequest
 export default {
   data() {
     return {
@@ -124,13 +125,14 @@ export default {
     },
     //选择修改内容
     handleModify(status) {
-      videoUpdateRequest(this.vid, status).then((res) => {
+      /*videoUpdateRequest(this.vid, status).then((res) => {
         if (res.data.code === 2000) {
-          this.$router.push({ name: "Upload", params: { vid: this.vid } });
+          this.$router.push({ name: "UploadVideoHome", params: { vid: this.vid } });
         }
       }).catch((err) => {
         this.$message.error(err.response.data.msg);
-      });
+      });*/
+      this.$router.push({ name: "UploadVideoHome", params: { vid: this.vid ,update: status} });
     },
     //删除视频
     deleteMyVideo(vid) {

@@ -52,6 +52,7 @@ export default {
         introduction: "",
         original:true,
       },
+      updateCode: 0,//修改视频的状态码
       status: 0, //状态码
       remarks: "", //审核结果备注
       current: 0,//当前所在的步骤
@@ -73,11 +74,17 @@ export default {
             case 500:
               this.current = 1;
               break;
-            case 1000:case 800:case 4001:case 4002:case 5001:case 5002:
+            case 1000:case 800:case 4001:case 4002:
+            //case 5001:case 5002:
               this.current = 2;
               break;
             case 2000:
               this.current = 3;
+              //修改视频
+              if(this.updateCode === 5001 || this.updateCode === 5002){
+                this.status = this.updateCode;
+                this.current = 2;
+              }
               break;
           }
         } else {
@@ -96,10 +103,6 @@ export default {
           this.current = 0;
           break;
         case 5002:
-          this.$notification.open({
-            message: '合集上传注意事项',
-            description: "上传合集时，必填项只有视频标题选项",
-          });
           this.current = 0;
           break;
       }
@@ -120,6 +123,7 @@ export default {
   created() {
     //如果说带有vid参数的话，可以查看本人视频审核状态
     if (this.$route.params.vid) {
+      this.updateCode = this.$route.params.update;
       //获取审核状态
       this.getStatus(this.$route.params.vid);
     }
