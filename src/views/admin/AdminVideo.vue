@@ -98,7 +98,7 @@ export default {
       columns,
       data: [],
       pagination: {
-        pageSize: 6,
+        pageSize: 5,
         current: 1,
         total: 0,
       },

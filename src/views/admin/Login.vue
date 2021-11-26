@@ -46,6 +46,7 @@ export default {
           login(this.loginForm).then((res) => {
             //保存token并设置1天过期
             storage.set("admin", res.data.data.token,24 * 60);
+            storage.set("adminInfo", res.data.data.info,24 * 60);
             this.$router.push({ name: "Admin" });
           }).catch((err) => {
             this.$message.error(err.response.data.msg);

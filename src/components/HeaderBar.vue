@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import storage from "@/utils/stored-data.js"
+import storage from "@/utils/stored-data.js";
 export default {
   data(){
     return{

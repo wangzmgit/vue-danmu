@@ -160,10 +160,18 @@ const routes = [{
 {
     path: '/admin',
     name: 'Admin',
+    meta: { admin: true },
     component: () =>
         import('../views/admin/AdminHome.vue'),
-    redirect: '/admin/info',
+    redirect: '/admin/dashboard',
     children: [
+        {
+            path: '/admin/dashboard',
+            name: 'AdminDashboard',
+            meta: { admin: true },
+            component: () =>
+                import('../views/admin/AdminDashboard.vue'),
+        },
         {
             path: '/admin/info',
             name: 'AdminInfo',
@@ -291,6 +299,12 @@ router.beforeEach((to, from, next) => {
             next();
         } else {
             router.push({ name: 'Login' });
+        }
+    } else if (to.meta.admin) {
+        if (storage.get('admin')) {
+            next();
+        } else {
+            router.push({ name: 'AdminLogin' });
         }
     } else {
         next();
