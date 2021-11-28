@@ -54,7 +54,6 @@ export default {
 }
 
 .list-title {
-  
   width: 100%;
   height: 30px;
   display: flex;
@@ -69,9 +68,9 @@ export default {
 
 .list-content {
   height: 440px;
-  overflow: hidden;
   overflow-y: scroll;
   
+  /**修改滚动条样式 */
   &::-webkit-scrollbar {
     width: 8px; 
   }
@@ -79,7 +78,6 @@ export default {
   &::-webkit-scrollbar-thumb {
     /*滚动条里面小方块*/
     border-radius: 2px;
-
     background: #999999;
   }
 

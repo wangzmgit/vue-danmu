@@ -132,6 +132,7 @@ export default {
       document.getElementById("danmaku").innerHTML = "";
     },
     DrawDanmaku({text, color, type},send = false) {
+      let width = document.getElementById("danmaku").offsetWidth;
       var item = document.createElement("span");
       var content = document.createTextNode(text);
       item.style.color = color;
@@ -139,10 +140,10 @@ export default {
       item.className = "danmaku-item";
       //滚动弹幕
       if (type == 0) {
-        item.style.textAlign = "left";
+        //设置轨道
         item.style.top = String(this.GetRowTunnel(text) * 26) + "px";
-        let duration = 30 - text.length * 0.5;
-        item.style.animation = "mov " + String(duration) + "s";
+        item.classList.add("danmaku-row");
+        item.style.transform = `translateX(-${width}px)`;
         this.danmaku.push(item);
         document.getElementById("danmaku").appendChild(item);
         item.addEventListener("animationend", () => {
@@ -152,28 +153,29 @@ export default {
         if(send){
           item.style.border = "1px solid red";
         }
+        item.classList.add("danmaku-row-move");
       }else if(type == 1){
         item.style.width = "100%";
         item.style.textAlign = "center";
         item.style.top = String(this.GetFixedTunnel(1) * 26) + "px";
-        item.style.animation = "danmaku-center 5s";
         this.danmaku.push(item);
         document.getElementById("danmaku").appendChild(item);
         item.addEventListener("animationend", () => {
           this.danmaku.splice(item);
           document.getElementById("danmaku").removeChild(item);
         });
+        item.classList.add("danmaku-center-move");
       }else if(type == 2){
         item.style.width = "100%";
         item.style.textAlign = "center";
         item.style.bottom = String(this.GetFixedTunnel(1) * 26) + "px";
-        item.style.animation = "danmaku-center 5s";
         this.danmaku.push(item);
         document.getElementById("danmaku").appendChild(item);
         item.addEventListener("animationend", () => {
           this.danmaku.splice(item);
           document.getElementById("danmaku").removeChild(item);
         });
+        item.classList.add("danmaku-center-move");
       }
       if(this.paused){
         item.style.animationPlayState = "paused";
@@ -194,7 +196,7 @@ export default {
 #danmaku {
   z-index: 1;
   position: absolute;
-  overflow: hidden;
+  overflow: hidden; 
   width: 100%;
   height: 100%;
 }

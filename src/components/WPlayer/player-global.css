@@ -5,80 +5,29 @@
     text-shadow: 1px 1px 0 #000, -1px -1px 0 #000, -1px 1px 0 #000, 1px -1px 0 #000;
 }
 
-
-
-@keyframes mov {
-    from {
-        right: -200px;
-    }
-    to {
-        right: 3000px;
-    }
+.danmaku-row{
+    right: 0;
 }
 
-@-moz-keyframes mov {
-    /* Firefox */
-    from {
-        right: -200px;
-    }
-    to {
-        right: 3000px;
-    }
+.danmaku-row-move{
+    will-change: transform;
+    animation: danmaku 5s linear;
+    animation-play-state: running;
 }
 
-@-webkit-keyframes mov {
-    /* Safari 和 Chrome */
-    from {
-        right: -200px;
-    }
-    to {
-        right: 3000px;
-    }
+.danmaku-center-move{
+    will-change: transform;
+    animation: danmaku-center 5s linear;
+    animation-play-state: running;
 }
 
-@-o-keyframes mov {
-    /* Opera */
+@keyframes danmaku {
     from {
-        right: -200px;
-    }
-    to {
-        right: 3000px;
+        transform: translateX(100%);
     }
 }
-
-
 
 @keyframes danmaku-center {
-    from {
-        visibility: visible;
-    }
-    to {
-        visibility: visible;
-    }
-}
-
-@-moz-keyframes danmaku-center {
-    /* Firefox */
-    from {
-        visibility: visible;
-    }
-    to {
-        visibility: visible;
-    }
-}
-
-@-webkit-keyframes danmaku-center {
-    /* Safari 和 Chrome */
-    from {
-        visibility: visible;
-    }
-    to {
-        visibility: visible;
-    }
-}
-
-@-o-keyframes danmaku-center {
-    /* Opera */
     from {
         visibility: visible;
     }
