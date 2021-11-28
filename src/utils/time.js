@@ -43,3 +43,12 @@ export function toRelativeTime(time) {
     }
     return year + "-" + month + "-" + day;
 }
+
+//转换到时长
+export function toDuration(time) {
+    var m = parseInt((time % 3600) / 60);
+    var s = parseInt(time % 60);
+    m = m < 10 ? "0" + m : m;
+    s = s < 10 ? "0" + s : s;
+    return m + ":" + s;
+}

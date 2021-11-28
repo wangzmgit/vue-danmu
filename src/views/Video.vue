@@ -75,6 +75,10 @@
             </div>
           </div>
         </div>
+        <!-- 弹幕列表 -->
+        <div>
+          <danmaku-list :vid="vid"></danmaku-list>
+        </div>
       </div>
     </div>
   </div>
@@ -86,11 +90,13 @@ import storage from "@/utils/stored-data.js";
 import HeaderBar from "@/components/HeaderBar.vue";
 import WPlayer from "@/components/WPlayer/WPlayer.vue";
 import CommentList from "@/components/CommentList";
+import DanmakuList from "@/components/DanmakuList";
 import { getVideoInfo } from "@/api/video.js";
 import {like,dislike,collect,cancelCollect,getInteractiveData} from "@/api/interactive.js"
 import { follow,unfollow } from "@/api/follow.js";
 import { getCommentList,comment } from "@/api/comment";
 import { utcToBeijing } from "@/utils/time.js";
+
 export default {
   data() {
     return {
@@ -274,7 +280,8 @@ export default {
   components: {
     "w-player": WPlayer,
     "header-bar": HeaderBar,
-    "comment-list":CommentList
+    "comment-list": CommentList,
+    "danmaku-list": DanmakuList,
   },
   filters: {
     toTime(time) {

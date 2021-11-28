@@ -55,3 +55,8 @@ export const recommendVideo = () => {
 export const getVideoList = (page,page_size) => {
   return request.get('v1/video/list/get?page=' + page + '&page_size=' + page_size);
 }
+
+//获取弹幕列表
+export const getDanmakuList = (vid) => {
+  return request.get('v1/danmaku/get?vid='+vid);
+}
