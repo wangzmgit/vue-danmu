@@ -121,7 +121,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 .msg{
   display: flex;
   height: 650px;
@@ -182,57 +182,74 @@ export default {
   background-color: #f0f0f0; 
   border-bottom: 1px solid #b8b8b8;
   overflow-y: auto;
+
+  /**修改滚动条样式 */
+  &::-webkit-scrollbar {
+    width: 8px; 
+  }
+
+  &::-webkit-scrollbar-thumb {
+    /*滚动条里面小方块*/
+    border-radius: 2px;
+    background: #999999;
+  }
+
+  &::-webkit-scrollbar-track {
+    /*滚动条里面轨道*/
+    border-radius: 5px;
+  }
 }
+
 /**聊天部分 */
 .content-box{
   min-height: 70px;
   margin: 0 20px;
+  &:nth-child(1){
+    margin-top: 10px;
+  }
+
+  .avatar-right{
+    float: right;
+  }
+
+  .content-right {
+    float: right;
+    max-width: 80%;
+    margin-right: 10px;
+    margin-top: 6px;
+    background: rgb(68, 165, 133);
+    color: #fff;
+    font-size: 16px;
+    border-radius: 3px;
+    padding: 5px 10px 5px 10px;
+  }
+  .avatar-left{
+    float: left;
+  }
+
+  .content-left-box{
+    float: left;
+    margin-left:10px;
+    margin-top: 10px;
+    max-width: 80%;
+    background: #fff;
+    padding: 5px 10px 5px 10px;
+    border-radius: 3px;
+  }
+
+  .content-left { 
+    font-size: 1rem;
+  }
 }
 
-.content-box:nth-child(1){
-  margin-top: 10px;
-}
+.msg-input{
+  textarea{
+    margin: 10px 0 0 2px;
+  }
 
-.avatar-right{
-  float: right;
-}
-
-.content-right {
-  float: right;
-  max-width: 80%;
-  margin-right: 10px;
-  margin-top: 6px;
-  background: rgb(68, 165, 133);
-  color: #fff;
-  font-size: 16px;
-  border-radius: 3px;
-  padding: 5px 10px 5px 10px;
-}
-
-.avatar-left{
-  float: left;
-}
-
-.content-left-box{
-  float: left;
-  margin-left:10px;
-  margin-top: 10px;
-  max-width: 80%;
-  background: #fff;
-  padding: 5px 10px 5px 10px;
-  border-radius: 3px;
-}
-
-.content-left { 
-  font-size: 1rem;
-}
-
-.msg-input>textarea{
-  margin: 10px 0 0 2px;
-}
-
-.msg-input>button{
-  float: right;
-  margin: 8px 10px 0 0;
+  button{
+    float: right;
+    margin: 8px 10px 0 0;
+  }
 }
 </style>
