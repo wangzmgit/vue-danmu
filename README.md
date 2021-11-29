@@ -6,7 +6,7 @@
 
 ## 配置项目
 #### 基本信息配置
-进入src/utils文件夹,打开config.js文件编辑网站基本信息
+进入src文件夹,打开config.js文件编辑网站基本信息
 ```
 const title = "网站标题";
 const email = "网站站长邮箱";

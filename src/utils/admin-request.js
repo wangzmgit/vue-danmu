@@ -1,5 +1,5 @@
 import axios from 'axios';
-import config from "./config"
+import config from "../config"
 import storage from "@/utils/stored-data.js"
 
 const AdminURL = config.url + "/api/";

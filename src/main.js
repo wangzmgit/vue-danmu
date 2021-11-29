@@ -2,6 +2,7 @@ import Vue from 'vue';
 import App from './App.vue';
 import router from './router';
 import store from './store';
+import config from './config';
 import "./assets/iconfont/iconfont.css";
 import {
     Button,
@@ -28,10 +29,11 @@ import {
     Select,
     Progress,
     Timeline
-  } from "ant-design-vue";
+} from "ant-design-vue";
 
 Vue.use(Menu);
 Vue.prototype.$message = message;
+Vue.prototype.$config = config;
 Vue.prototype.$notification = notification;
 
 Vue.component(Button.name, Button);
@@ -77,3 +79,16 @@ new Vue({
     store,
     render: h => h(App)
 }).$mount('#app')
+
+console.log(
+    `%c 版本号：3.6.0 %c 适用后端版本:3.6.2 %c`,
+    'background:rgb(244,167,89) ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff',
+    'background:rgb(30,152,255) ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff',
+    'background:transparent'
+)
+
+var content = `在这里看源码，不如直接加入开发
+Gitee:  https://gitee.com/wzmgit/vue-danmu
+Github:  https://github.com/wangzmgit/vue-danmu
+`
+console.log(content);

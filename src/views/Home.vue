@@ -60,7 +60,6 @@
 </template>
 
 <script>
-import config from "@/utils/config.js";
 import { getCarousel } from "@/api/carousel.js";
 import HeaderBar from "@/components/HeaderBar.vue";
 import Recommend from "@/components/Recommend.vue";
@@ -70,7 +69,7 @@ export default {
   data() {
     return {
       carousel: [],
-      config: config,
+      config: this.$config,
     };
   },
   methods: {

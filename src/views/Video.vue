@@ -53,20 +53,20 @@
         <!--作者信息-->
         <div class="video-author">
           <a-skeleton :loading="loading" avatar title />
-          <div v-if="!loading">
+          <div class="video-author-box" v-if="!loading">
             <!--头像-->
-            <div class="video-author-avatar">
+            <div class="author-avatar">
               <a-avatar v-if="videoInfo.author.avatar" :size="60" :src="videoInfo.author.avatar"/>
               <a-avatar v-else :size="60" icon="user" />
             </div>
             <!--昵称和个签-->
-            <div v-if="videoInfo.author.uid">
-              <p class="video-author-name" @click="user(videoInfo.author.uid)">{{ videoInfo.author.name }}</p>
-              <p class="video-author-sign">{{ videoInfo.author.sign }}</p>
+            <div class="author-info" v-if="videoInfo.author.uid">
+              <p @click="user(videoInfo.author.uid)">{{ videoInfo.author.name }}</p>
+              <p>{{ videoInfo.author.sign }}</p>
             </div>
             <div v-else>
-              <p class="video-author-name">用户不存在</p>
-              <p class="video-author-sign">账号可能已经注销</p>             
+              <p>用户不存在</p>
+              <p>账号可能已经注销</p>             
             </div>
             <div class="follow-btn" v-if="videoInfo.author.uid">
               <a-button v-if="!userInfo" disabled size="small">未登录</a-button>
@@ -85,7 +85,6 @@
 </template>
 
 <script>
-import config from "@/utils/config.js";
 import storage from "@/utils/stored-data.js";
 import HeaderBar from "@/components/HeaderBar.vue";
 import WPlayer from "@/components/WPlayer/WPlayer.vue";
@@ -100,7 +99,7 @@ import { utcToBeijing } from "@/utils/time.js";
 export default {
   data() {
     return {
-      title:config.title,
+      title: this.$config.title,
       showPlayer:false,
       vid: 0,
       authorID:0,
@@ -291,7 +290,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 .video {
   height: 100%;
   width: 100%;
@@ -431,95 +430,52 @@ export default {
   min-width: 350px;
 }
 
+/**作者信息 */
 .video-author {
-  position: relative;
-  width: 90%;
+  width: 100%;
   height: 90px;
-  background: #f5f5f5;
-  margin: 10px auto;
-  border-radius: 10px;
-  -webkit-box-shadow:0px 3px 3px #c8c8c8 ;
-  -moz-box-shadow:0px 3px 3px #c8c8c8 ;
-  box-shadow:0px 3px 3px #c8c8c8 ;
-}
+  
+  .video-author-box{
+    display: flex;
+    height: 100%;
+    align-items: center;
+    .author-avatar {
+      width: 80px;
+      padding-left: 10px;
+    }
+    .author-info{
+      position: relative;
+      height: 60px;
+      width: calc(100% - 160px);
+      
+      p{
+        margin: 0;
+        position: absolute;
+        &:nth-child(1){
+          top: 0;
+          font-size: 18px;
+          cursor: pointer;
+          font-weight: bold;
+        }
 
-.video-author-avatar {
-  padding-top: 15px;
-  padding-left: 10px;
-}
+        &:nth-child(2){
+          bottom: 6px;
+          font-size: 14px;
+          color: #303030;
+          overflow: hidden;
+          text-overflow: ellipsis; 
+          display: -webkit-box;
+          -webkit-line-clamp: 1;
+          -webkit-box-orient: vertical;
+        }
+      }
+    }
 
-.video-author-name {
-  position: absolute;
-  top: 20px;
-  left: 90px;
-  width: 140px;
-  font-size: 18px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.video-author-sign {
-  position: absolute;
-  top: 48px;
-  left: 90px;
-  width: 140px;
-  font-size: 14px;
-  color: #303030;
-  overflow: hidden;
-  text-overflow: ellipsis; 
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-}
-
-.follow-btn{
-  position: absolute;
-  right: 20px;
-  top: 33px;
-}
-
-/*屏幕宽度大于1600px时的布局*/
-@media screen and (min-width:1600px) {
-  .content-left {
-    width: calc(100% - 400px);
-  }
-
-  .content-right {
-    width: 400px;
-  }
-
-  .video-author {
-    width: 100%;
-    height: 110px;
-  }
-
-  .video-author-avatar {
-    padding-top: 25px;
-    padding-left: 16px;
-  }
-
-  .video-author-name {
-    top: 24px;
-    left: 90px;
-    width: 160px;
-    font-size: 20px;
-  }
-
-  .video-author-sign {
-    top: 60px;
-    left: 90px;
-    width: 210px;
-    font-size: 16px;
-  }
-
-  .follow-btn{
-    right: 20px;
-    top: 40px;
-  }
-
-  .follow-btn>button{
-    width: 70px;
-    height: 30px;
+    .follow-btn{
+      width: 80px;
+      text-align: center;
+    }
   }
 }
+
 </style>

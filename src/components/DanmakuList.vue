@@ -55,7 +55,7 @@ export default {
 
 .list-title {
   width: 100%;
-  height: 30px;
+  height: 40px;
   display: flex;
   align-items: center;
   background-color: #f5f5f5;

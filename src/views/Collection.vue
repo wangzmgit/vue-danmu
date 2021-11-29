@@ -53,7 +53,6 @@
 </template>
 
 <script>
-import config from "@/utils/config.js";
 import storage from "@/utils/stored-data.js";
 import HeaderBar from "@/components/HeaderBar.vue";
 import WPlayer from "@/components/WPlayer/WPlayer.vue";
@@ -73,7 +72,7 @@ export default {
       showDesc: false,//显示简介
       timer: "",//刷新播放器
       loading: true,//加载用户信息中
-      title: config.title,
+      title: this.$config.title,
       showPlayer: false, 
       disabled: false,//禁用加载更多
     };

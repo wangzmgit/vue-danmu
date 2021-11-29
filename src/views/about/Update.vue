@@ -76,6 +76,14 @@
         <p>支持Docker</p>
       </a-timeline-item>
       <a-timeline-item>
+        <p>2021-11-22 - 2021-11-29</p>
+        <p>docker内置ffmpeg</p>
+        <p>重做合集功能</p>
+        <p>仪表盘页面</p>
+        <p>重做部分页面样式</p>
+        <p>优化弹幕</p>
+      </a-timeline-item>
+      <a-timeline-item>
         <p>未来</p>
       </a-timeline-item>
     </a-timeline>
