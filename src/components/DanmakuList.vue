@@ -96,11 +96,4 @@ export default {
     }
   }
 }
-
-/*屏幕宽度大于1600px时的布局*/
-@media screen and (min-width: 1600px) {
-  .danmaku-list {
-    width: 400px;
-  }
-}
 </style>

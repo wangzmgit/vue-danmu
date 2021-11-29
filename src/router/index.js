@@ -130,6 +130,7 @@ const routes = [{
         {
             path: '/user/:uid/following',
             name: 'UserFollowing',
+            meta: { auth: true },
             component: () =>
                 import('../views/user/UserFollow.vue'),
         },

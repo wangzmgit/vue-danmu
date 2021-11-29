@@ -23,11 +23,11 @@ export const getFollowData = (uid) => {
 }
 
 //获取关注列表
-export const getFollowingList = (uid) => {
-    return request.get('v1/follow/following?uid='+uid)
+export const getFollowingList = (uid, page, page_size) => {
+    return request.get('v1/follow/following?uid='+uid + '&page=' + page + '&page_size=' + page_size)
 }
 
 //获取粉丝列表
-export const getFollowersList = (uid) => {
-    return request.get('v1/follow/followers?uid='+uid)
+export const getFollowersList = (uid, page, page_size) => {
+    return request.get('v1/follow/followers?uid='+uid + '&page=' + page + '&page_size=' + page_size)
 }

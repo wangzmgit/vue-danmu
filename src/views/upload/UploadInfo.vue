@@ -1,9 +1,9 @@
 <template>
   <div>
     <div class="upload-cover">
-      <a-upload-dragger name="cover" :action="uploadCover" :headers="headers" :disabled="coverDisabled" :before-upload="beforeUploadCover" @change="handleChange">
+      <a-upload-dragger name="cover" :showUploadList="false" :action="uploadCover" :headers="headers" :disabled="disabled" :before-upload="beforeUploadCover" @change="handleChange">
         <img v-if="$parent.upload.cover" class="cover" :src="$parent.upload.cover" alt="封面" />
-        <div v-else>
+        <div v-else-if="!uploading">
           <p class="ant-upload-drag-icon">
             <a-icon type="inbox" />
           </p>
@@ -11,6 +11,7 @@
           <p class="ant-upload-hint">上传文件大小需小于5M</p>
           <p class="ant-upload-hint">支持.jpg .jpeg .png格式文件</p>
         </div>
+        <a-progress v-else type="circle" :percent="percent" />
       </a-upload-dragger>
     </div>
     <a-form-model ref="upload" :model="$parent.upload" :rules="rules" :label-col="{ span: 4, offset: 1 }" :wrapper-col="{ span: 15, offset: 1 }">
@@ -39,7 +40,9 @@ export default {
   data() {
     return {
       uploadCover: CoverUrl,
-      coverDisabled: false, //上传封面是否禁用
+      percent: 0, //上传进度
+      uploading: false, //上传中
+      disabled: false, //上传封面是否禁用
       headers: {
         Authorization: "Bearer " + storage.get("token"),
       },
@@ -62,13 +65,19 @@ export default {
       return isJpgOrPng && isLt5M;
     },
     handleChange(info) {
+      this.uploading = true;
       const status = info.file.status;
       if (status === "done") {
         this.$parent.upload.cover = info.file.response.data.url;
-        this.coverDisabled = true;
+        this.disabled = true;
         this.$message.success("上传完成");
       } else if (status === "error") {
         this.$message.error("文件上传失败");
+      }
+      const event = info.event;
+      if (event) {
+        let percent = Math.floor((event.loaded / event.total) * 100);
+        this.percent = percent;
       }
     },
     uploadInfo() {
