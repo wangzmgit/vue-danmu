@@ -44,11 +44,11 @@
       <ul>
         <li v-if="config.mobile"><a :href="config.mobile">移动端</a></li>
         <li v-if="config.mobile" class="split"></li>
-        <li><a href="https://www.showdoc.com.cn/danmu3/7242809630371197" target="_blank">文档</a></li>
+        <li><a href="http://www.kuukaa.fun/deploy/env.html" target="_blank">文档</a></li>
         <li class="split"></li>
         <li @click="about('Update')"><a>更新历史</a></li>
         <li class="split"></li>
-        <li><a :href="`mailto:${config.email}`" target="_blank">联系站长</a></li>
+        <li @click="about('Opinion')"><a>意见反馈</a></li>
       </ul>
       <ul>
         <li><a href="https://beian.miit.gov.cn/#/Integrated/index" target="_blank">{{ config.icp }}</a></li>

@@ -32,6 +32,7 @@ import {
 } from "ant-design-vue";
 
 Vue.use(Menu);
+Vue.prototype.$success = Modal.success;
 Vue.prototype.$message = message;
 Vue.prototype.$config = config;
 Vue.prototype.$notification = notification;
@@ -55,6 +56,7 @@ Vue.component(Steps.Step.name, Steps.Step);
 Vue.component(Switch.name, Switch);
 Vue.component(FormModel.name, FormModel);
 Vue.component(FormModel.Item.name, FormModel.Item);
+Vue.component(Radio.name, Radio);
 Vue.component(Radio.Group.name, Radio.Group);
 Vue.component(Radio.Button.name, Radio.Button);
 Vue.component(Skeleton.name, Skeleton);
@@ -81,7 +83,7 @@ new Vue({
 }).$mount('#app')
 
 console.log(
-    `%c 版本号：3.6.1 %c 适用后端版本:3.6.5 %c`,
+    `%c 版本号：3.6.3 %c 适用后端版本:3.6.6 %c`,
     'background:rgb(244,167,89) ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff',
     'background:rgb(30,152,255) ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff',
     'background:transparent'
