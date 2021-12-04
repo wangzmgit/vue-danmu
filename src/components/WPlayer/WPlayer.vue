@@ -70,6 +70,26 @@ export default {
       danmakuList: [],
     };
   },
+  computed: {
+    //播放器设置
+    playerConfig: {
+      get(){
+        let config = localStorage.getItem("player-config");
+        if(!config){
+          localStorage.setItem("player-config", JSON.stringify({
+            volume: this.video.volume,
+            danmaku: true,
+          }));
+        }
+        return JSON.parse(config);
+      },
+      set(val){
+        let config = JSON.parse(localStorage.getItem("player-config"));
+        config[val.key] = val.value;
+        localStorage.setItem("player-config", JSON.stringify(config));
+      }
+    }
+  },
   methods: {
     VideoInit() {
       let video = this.$refs.video;
@@ -108,7 +128,9 @@ export default {
     },
     //清除弹幕
     ClearDanmaku() {
-      this.$refs.danmaku.ClearDanmaku();
+      if(this.$refs.danmaku) {
+        this.$refs.danmaku.ClearDanmaku();
+      }
     },
     //暂停弹幕
     PauseDanmaku() {
@@ -204,6 +226,10 @@ export default {
       };
       xhr.send();
     }*/
+    //初始化配置
+    InitConfig(){
+      this.$refs.video.volume = this.playerConfig.volume / 100;
+    }
   },
   mounted(){
     if(this.type == "hls"){
@@ -223,6 +249,9 @@ export default {
     }
   },
   created(){
+    this.$nextTick(()=>{
+      this.InitConfig();
+    });
     this.GetDanmaku();
   },
   beforeDestroy() {

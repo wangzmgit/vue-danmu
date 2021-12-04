@@ -11,7 +11,7 @@
         <span>快捷键说明</span>
       </li>
       <li class="menu-item">
-        <span>版本:0.2.3</span>
+        <span>版本:0.2.5</span>
       </li>
     </ul>
   </div>

@@ -154,6 +154,7 @@ export default {
     //设置音量
     SetVolume() {
       this.$parent.$refs.video.volume = this.video.volume / 100;
+      this.$parent.playerConfig = { key: "volume", value: this.video.volume };
     },
     // 判断是否为全屏
     IsFullScreen() {
@@ -242,6 +243,9 @@ export default {
     "w-button": wButton,
     "v-slider": VueSlider,
   },
+  created(){
+    this.video.volume = this.$parent.playerConfig.volume;
+  }
 };
 </script>
 

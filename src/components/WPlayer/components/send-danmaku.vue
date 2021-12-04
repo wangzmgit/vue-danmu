@@ -2,7 +2,7 @@
   <div class="bottom-bar">
     <span class="danmaku-amount">{{$parent.amount}}条弹幕</span>
     <div class="danmaku-switch">
-      <w-switch @change="ShowDanmaku"></w-switch>
+      <w-switch :value="danmaku" @change="ShowDanmaku"></w-switch>
     </div>
     <!--弹幕设置-->
     <div v-show="menu" class="danmaku-menu">
@@ -30,7 +30,7 @@
       <svg-icon class="danmaku-setting-icon" icon="setting"></svg-icon>
     </div>  
     <input ref="send" class="input" v-model="danForm.text" placeholder="发个友善的弹幕见证当下"/>
-    <w-button :disabled="!send" class="send-btn" @click="Send()">发送</w-button>
+    <w-button :disabled="!danmaku" class="send-btn" @click="Send()">发送</w-button>
   </div>
 </template>
 
@@ -50,7 +50,7 @@ export default {
       },
       menu:false,
       opacity:100,
-      send:true,
+      danmaku:true,
     }
   },
   methods:{
@@ -68,8 +68,9 @@ export default {
     },
     //开启或关闭弹幕
     ShowDanmaku(val){
-      this.send = val;
+      this.danmaku = val;
       this.$parent.ShowDanmaku(val);
+      this.$parent.playerConfig = { key: "danmaku", value: val };
     },
     //发送弹幕
     Send(){
@@ -87,6 +88,9 @@ export default {
     "w-button": WButton,
     "v-slider": VueSlider,
   },
+  created(){
+    this.ShowDanmaku(this.$parent.playerConfig.danmaku);
+  }
 };
 </script>
 

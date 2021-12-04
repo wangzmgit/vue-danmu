@@ -9,9 +9,15 @@
 
 <script>
 export default {
+  props: {
+    value: {
+      type: Boolean,
+      default: true,
+    },
+  },
   data() {
     return {
-      open: true,
+      open: this.value,
     };
   },
   methods: {
