@@ -41,7 +41,6 @@
 
 <script>
 import Moment from "moment";
-import { mapActions } from "vuex";
 import storage from "@/utils/stored-data.js";
 import { AvatarUrl } from "@/utils/request.js";
 import { getUserInfo,modifyUserInfo } from "@/api/user.js"
@@ -68,7 +67,6 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["setUserInfo"]),
     initData() {
       this.userForm.name = this.userInfo.name;
       this.userForm.sign = this.userInfo.sign;
@@ -93,7 +91,7 @@ export default {
         getUserInfo().then((res)=>{
           if(res.data.code === 2000){
             this.$message.success("上传成功");
-            this.setUserInfo(res.data.data.data);
+            storage.set(res.data.data.data);
             this.$router.go(0);
           }
         })      
