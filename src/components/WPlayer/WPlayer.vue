@@ -62,7 +62,7 @@ export default {
       msg:"",//消息内容
       amount:0,//弹幕数量
       message: false,  
-      control:true,
+      control:false,
       showDanmaku: true,  
       showVideoInfo:false,
       showHotKey:false,
@@ -75,12 +75,6 @@ export default {
     playerConfig: {
       get(){
         let config = localStorage.getItem("player-config");
-        if(!config){
-          localStorage.setItem("player-config", JSON.stringify({
-            volume: this.video.volume,
-            danmaku: true,
-          }));
-        }
         return JSON.parse(config);
       },
       set(val){
@@ -228,6 +222,16 @@ export default {
     }*/
     //初始化配置
     InitConfig(){
+      let config = localStorage.getItem("player-config");
+      if(!config){
+        localStorage.setItem("player-config", JSON.stringify({
+          volume: 80,
+          danmaku: true,
+        }));
+      }
+    },
+    //读取配置
+    ReadConfig(){
       this.$refs.video.volume = this.playerConfig.volume / 100;
     }
   },
@@ -247,11 +251,10 @@ export default {
       })*/
       this.$refs.video.src = this.src;
     }
+    this.control = true;
   },
   created(){
-    this.$nextTick(()=>{
-      this.InitConfig();
-    });
+    this.InitConfig();
     this.GetDanmaku();
   },
   beforeDestroy() {
