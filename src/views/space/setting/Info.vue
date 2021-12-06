@@ -91,7 +91,8 @@ export default {
         getUserInfo().then((res)=>{
           if(res.data.code === 2000){
             this.$message.success("上传成功");
-            storage.set(res.data.data.data);
+            storage.set("userInfo", res.data.data.data);
+            console.log(res.data.data.data)
             this.$router.go(0);
           }
         })      
@@ -106,8 +107,8 @@ export default {
             if(res.data.code === 2000){
               getUserInfo().then((res)=>{
                 if(res.data.code === 2000){
-                  this.$message.success("上传成功");
-                  this.setUserInfo(res.data.data.data);
+                  this.$message.success("保存成功");
+                  storage.set("userInfo", res.data.data.data);
                   this.$router.go(0);
                 }
               })   

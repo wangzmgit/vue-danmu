@@ -36,7 +36,7 @@
         </div>
       </div>
       <div class="msg-input">
-        <a-input v-model="msg.content" :autosize="{ minRows: 4, maxRows: 4 }" :maxLength="200" placeholder="发个消息呗~" type="textarea"/>
+        <a-input v-model="msg.content" :autosize="{ minRows: 4, maxRows: 4 }" :maxLength="250" placeholder="发个消息呗~" type="textarea"/>
         <a-button type="primary" :disabled="disabled" @click="_sendMsg()">发送</a-button>
       </div>
     </div>

@@ -1,6 +1,6 @@
 const title = "HI!Danmu";
-const url = "http://localhost:9000";
-const mobile = "http://localhost:8080";
+const url = "http://api.kuukaa.fun";
+const mobile = "http://m.kuukaa.fun";
 const icp = "icp备案信息";
 
 const config = {
