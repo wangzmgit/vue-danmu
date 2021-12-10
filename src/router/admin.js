@@ -57,6 +57,12 @@ let routes = [
                     import('../views/admin/AdminCarousel.vue'),
             },
             {
+                path: '/admin/partition',
+                name: 'AdminPartition',
+                component: () =>
+                    import('../views/admin/AdminPartition.vue'),
+            },
+            {
                 path: '/admin/opinion',
                 name: 'AdminOpinion',
                 component: () =>

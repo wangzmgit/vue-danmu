@@ -21,6 +21,21 @@
       <a-form-model-item label="视频简介">
         <a-input v-model="$parent.upload.introduction" :autosize="{ minRows: 4, maxRows: 4 }" :maxLength="100" placeholder="请输入视频简介，0-100个字符" type="textarea"/>
       </a-form-model-item>
+      <a-form-model-item label="分区">
+        <div class="select-partition" v-if="$parent.status == 0">
+          <a-select style="width: 150px" @change="partitionChange">
+            <a-select-option v-for="item in partitions" :key="item.id">
+              {{ item.content }}
+            </a-select-option>
+          </a-select>
+          <a-select style="width: 150px" v-if="selectedPartition" v-model="$parent.upload.partition">
+            <a-select-option v-for="item in subpartition" :key="item.id">
+              {{ item.content }}
+            </a-select-option>
+          </a-select>
+        </div>
+        <span v-else> {{ $parent.partitionName }} </span>
+      </a-form-model-item>
       <a-form-model-item label="禁止转载">
         <a-switch v-model="$parent.upload.original" />
       </a-form-model-item>
@@ -35,10 +50,14 @@
 <script>
 import storage from "@/utils/stored-data.js";
 import { CoverUrl } from "@/utils/request.js";
+import { getPartition } from "@/api/partition";
 import { uploadVideoInfo, updateVideoInfo } from "@/api/video.js";
 export default {
   data() {
     return {
+      selectedPartition: false,
+      partitions: [],
+      subpartition: [],
       uploadCover: CoverUrl,
       percent: 0, //上传进度
       uploading: false, //上传中
@@ -81,8 +100,16 @@ export default {
       }
     },
     uploadInfo() {
+                if(this.$parent.upload.partition === 0){
+            this.$message.error("请选择分区");
+            return;
+          }
       this.$refs.upload.validate((valid) => {
         if (valid) {
+          if(this.$parent.upload.partition === 0){
+            this.$message.error("请选择分区");
+            return;
+          }
           uploadVideoInfo(this.$parent.upload).then((res) => {
             this.$parent.upload.vid = res.data.data.vid;
             this.$parent.current = 1;
@@ -110,7 +137,30 @@ export default {
         }
       });
     },
+    getPartitionList(fid) {
+      getPartition(fid).then((res) => {
+        if (res.data.code === 2000) {
+          if (fid === 0) {
+            this.partitions = res.data.data.partitions;
+          } else {
+            this.subpartition = res.data.data.partitions;
+            this.$parent.upload.partition = res.data.data.partitions[0].id;
+          }
+        }
+      }).catch((err) => {
+        this.$message.error(err.response.data.msg);
+      });
+    },
+    partitionChange(val) {
+      this.getPartitionList(val);
+      if(!this.selectedPartition){
+        this.selectedPartition = true;
+      }
+    }
   },
+  created(){
+    this.getPartitionList(0);
+  }
 };
 </script>
 
@@ -121,14 +171,19 @@ export default {
 }
 
 .cover {
-  width: 350px;
-  height: 170px;
+  width: 300px;
+  height: 140px;
+}
+
+.select-partition{
+  width: 330px;
+  display: flex;
+  justify-content: space-between;
 }
 
 .upload-next-btn {
   float: right;
   margin-right: 60px;
-  margin-top: 30px;
 }
 
 .upload-next-btn > button {

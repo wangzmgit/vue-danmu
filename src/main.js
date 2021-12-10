@@ -83,7 +83,7 @@ new Vue({
 }).$mount('#app')
 
 console.log(
-    `%c 版本号：3.6.4 %c 适用后端版本:3.6.6 - 3.6.7 %c`,
+    `%c 版本号：3.6.5 %c 适用后端版本:3.6.8 %c`,
     'background:rgb(244,167,89) ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff',
     'background:rgb(30,152,255) ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff',
     'background:transparent'

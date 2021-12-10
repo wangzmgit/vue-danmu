@@ -104,3 +104,13 @@ export const getRecentData = () => {
 export const getOpinionList = (page, page_size) => {
   return request.get('v1/admin/opinion/list?page=' + page + '&page_size=' + page_size);
 }
+
+//添加分区
+export const addPartition = ({ content, fid }) => {
+  return request.post('v1/admin/partition/add', { content, fid });
+}
+
+//删除分区
+export const deletePartition = (id) => {
+  return request.post('v1/admin/partition/delete', { id });
+}

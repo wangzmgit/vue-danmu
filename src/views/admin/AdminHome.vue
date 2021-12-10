@@ -16,7 +16,8 @@
         <a-menu-item key="5">视频审核</a-menu-item>
         <a-menu-item key="6">公告管理</a-menu-item>
         <a-menu-item key="7">轮播图管理</a-menu-item>
-        <a-menu-item key="8">意见反馈</a-menu-item>
+        <a-menu-item key="8">分区管理</a-menu-item>
+        <a-menu-item key="9">意见反馈</a-menu-item>
       </a-menu>
       <div class="admin-router">
         <router-view></router-view>
@@ -55,8 +56,10 @@ export default {
           return ["6"];
         case "/admin/carousel":
           return ["7"];
-        case "/admin/opinion":
+        case "/admin/partition":
           return ["8"];
+        case "/admin/opinion":
+          return ["9"];
       }
     },
     handleSelect(select) {
@@ -83,6 +86,9 @@ export default {
           this.$router.push({ name: "AdminCarousel" });
           break;   
         case "8":
+          this.$router.push({ name: "AdminPartition" });
+          break;     
+        case "9":
           this.$router.push({ name: "AdminOpinion" });
           break;        
       }

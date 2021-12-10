@@ -50,8 +50,10 @@ export default {
         cover: "",
         video: "",
         introduction: "",
-        original:true,
+        original: true,
+        partition: 0,
       },
+      partitionName: "",//分区名称
       updateCode: 0,//修改视频的状态码
       status: 0, //状态码
       remarks: "", //审核结果备注
@@ -69,6 +71,7 @@ export default {
           this.upload.title = video.title;
           this.upload.cover = video.cover;
           this.upload.introduction = video.introduction;
+          this.partitionName = video.partition;
           switch (this.status) {
             //详细信息参考状态码文档
             case 500:

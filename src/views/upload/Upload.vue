@@ -74,7 +74,7 @@ export default {
     background-color: #fff;
     display: flex;
     margin: 10px auto 30px;
-    height: 700px;
+    height: 710px;
   }
 
   .upload-menu{
