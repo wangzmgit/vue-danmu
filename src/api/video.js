@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
 //上传视频信息
-export const uploadVideoInfo = ({ title, cover, introduction, original, parent }) => {
-  return request.post('v1/video/upload', { title, cover, introduction, original, parent });
+export const uploadVideoInfo = ({ title, cover, introduction, original, partition }) => {
+  return request.post('v1/video/upload', { title, cover, introduction, original, partition });
 }
 
 //获取视频状态
