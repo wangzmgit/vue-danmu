@@ -22,11 +22,11 @@
           <img src="../assets/recommend.svg" />
           <span>视频列表</span>
         </div>
-        <a-button @click="getMore()">加载更多<a-icon type="right" /> </a-button>
+        <a-button @click="getMore()">更多<a-icon type="right" /> </a-button>
       </div>
       <!--视频列表-->
       <div class="home-main">
-        <video-list ref="child"></video-list>
+        <video-list :videos="videos"></video-list>
       </div>
       <!-- 合集列表 -->
       <div class="transition">
@@ -60,6 +60,7 @@
 </template>
 
 <script>
+import { getVideoList } from "@/api/video";
 import { getCarousel } from "@/api/carousel.js";
 import HeaderBar from "@/components/HeaderBar.vue";
 import Recommend from "@/components/Recommend.vue";
@@ -69,6 +70,7 @@ export default {
   data() {
     return {
       carousel: [],
+      videos: [],
       config: this.$config,
     };
   },
@@ -85,8 +87,22 @@ export default {
         window.open(url, "_blank");
       }
     },
+    videoList() {
+      //参数 页码，页面大小，分区id(0所有分区)
+      getVideoList(1, 10, 0).then(res => {
+        if (res.data.code === 2000) {
+          this.videos = res.data.data.videos;
+        }
+      });
+    },
     getMore() {
-      this.$refs.child.getMore();
+      this.$router.push({
+        name: "VideoList",
+        query: {
+          parent: 0,
+          partition: 0,
+        }
+      })
     },
     about(name){
       this.$router.push({ name: name });
@@ -97,6 +113,7 @@ export default {
   },
   created() {
     this._getCarousel();
+    this.videoList();
   },
   components: {
     "header-bar": HeaderBar,

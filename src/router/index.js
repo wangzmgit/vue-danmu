@@ -66,6 +66,12 @@ const baseRoutes = [{
         import('../views/Search.vue')
 },
 {
+    path: '/video/list',
+    name: 'VideoList',
+    component: () =>
+        import('../views/VideoList.vue')
+},
+{
     path: '/404',
     name: '404',
     component: () =>

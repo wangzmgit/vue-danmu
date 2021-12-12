@@ -1,6 +1,6 @@
 <template>
   <div class="card-list">
-    <div class="v-card" v-for="(item, index) in videoList" :key="index">
+    <div class="v-card" v-for="(item, index) in videos" :key="index">
       <div class="card" @click="video(item.vid)">
         <img :src="item.cover" />
         <div class="title">
@@ -12,45 +12,18 @@
 </template>
 
 <script>
-import { getVideoList } from "@/api/video";
 export default {
-  props: {},
-  data() {
-    return {
-      videoList: [],
-      page: 1,
-      flag: true, //视频在第一页
-    };
+  props: {
+    videos: {
+      type: Array,
+      default: null,
+    },
   },
   methods: {
-    _getVideoList() {
-      getVideoList(this.page, 10).then(res => {
-        if (res.data.code === 2000) {
-          if (this.flag) {
-            this.videoList = res.data.data.videos;
-            this.flag = false;
-          } else {
-            var newList = res.data.data.videos;
-            if (newList.length == 0) {
-              this.$message.info("没有更多了");
-            } else {
-              this.videoList = this.videoList.concat(newList);
-            }
-          }
-        }
-      });
-    },
     //页面跳转
     video(vid){
       this.$router.push({ name: "Video", params: { vid: vid } });
     },
-    getMore() {
-      this.page++;
-      this._getVideoList();
-    },
-  },
-  created() {
-    this._getVideoList();
   },
 };
 </script>

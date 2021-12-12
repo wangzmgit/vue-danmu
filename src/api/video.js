@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
 //上传视频信息
-export const uploadVideoInfo = ({ title, cover, introduction, original, parent}) => {
-  return request.post('v1/video/upload', { title, cover, introduction, original, parent});
+export const uploadVideoInfo = ({ title, cover, introduction, original, parent }) => {
+  return request.post('v1/video/upload', { title, cover, introduction, original, parent });
 }
 
 //获取视频状态
@@ -52,11 +52,11 @@ export const recommendVideo = () => {
 }
 
 //获取视频列表
-export const getVideoList = (page,page_size) => {
-  return request.get('v1/video/list/get?page=' + page + '&page_size=' + page_size);
+export const getVideoList = (page, page_size, partition) => {
+  return request.get('v1/video/list/get?page=' + page + '&page_size=' + page_size + '&partition=' + partition);
 }
 
 //获取弹幕列表
 export const getDanmakuList = (vid) => {
-  return request.get('v1/danmaku/get?vid='+vid);
+  return request.get('v1/danmaku/get?vid=' + vid);
 }
