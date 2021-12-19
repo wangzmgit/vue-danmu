@@ -4,7 +4,6 @@ import Home from '../views/Home.vue';
 import storage from "@/utils/stored-data.js";
 import userRoutes from "./user.js";
 import spaceRoutes from "./space.js";
-import adminRoutes from "./admin.js";
 import uploadRoutes from "./upload.js";
 
 Vue.use(VueRouter);
@@ -91,7 +90,7 @@ const baseRoutes = [{
 }
 ]
 
-const routes = baseRoutes.concat(userRoutes, spaceRoutes, adminRoutes, uploadRoutes);
+const routes = baseRoutes.concat(userRoutes, spaceRoutes, uploadRoutes);
 
 const router = new VueRouter({
     routes
@@ -105,12 +104,6 @@ router.beforeEach((to, from, next) => {
             next();
         } else {
             router.push({ name: 'Login' });
-        }
-    } else if (to.meta.admin) {
-        if (storage.get('admin')) {
-            next();
-        } else {
-            router.push({ name: 'AdminLogin' });
         }
     } else {
         next();
