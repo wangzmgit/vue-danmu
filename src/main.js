@@ -25,7 +25,6 @@ import {
     notification,
     Skeleton,
     Result,
-    Table,
     Select,
     Progress,
     Timeline
@@ -61,7 +60,6 @@ Vue.component(Radio.Group.name, Radio.Group);
 Vue.component(Radio.Button.name, Radio.Button);
 Vue.component(Skeleton.name, Skeleton);
 Vue.component(Result.name, Result);
-Vue.component(Table.name, Table);
 Vue.component(Select.name, Select);
 Vue.component(Select.Option.name, Select.Option);
 Vue.component(Progress.name, Progress);
@@ -83,7 +81,7 @@ new Vue({
 }).$mount('#app')
 
 console.log(
-    `%c 版本号：3.6.5 %c 适用后端版本:3.6.8 %c`,
+    `%c 版本号：3.7.0 %c 适用后端版本:3.7.0 %c`,
     'background:rgb(244,167,89) ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff',
     'background:rgb(30,152,255) ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff',
     'background:transparent'

@@ -206,7 +206,7 @@ export default {
     },
     //处理时间格式
     VideoTime(time) {
-      var m = parseInt((time % 3600) / 60);
+      var m = parseInt(time / 60);
       var s = parseInt(time % 60);
       m = m < 10 ? "0" + m : m;
       s = s < 10 ? "0" + s : s;
