@@ -50,19 +50,17 @@ export default {
   },
   methods: {
     getPartitionList(fid) {
-      getPartition(fid)
-        .then((res) => {
-          if (res.data.code === 2000) {
-            if (fid === 0) {
-              this.partitions = res.data.data.partitions;
-            } else {
-              this.subpartition = res.data.data.partitions;
-            }
+      getPartition(fid).then((res) => {
+        if (res.data.code === 2000) {
+          if (fid === 0) {
+            this.partitions = res.data.data.partitions;
+          } else {
+            this.subpartition = res.data.data.partitions;
           }
-        })
-        .catch((err) => {
-          this.$message.error(err.response.data.msg);
-        });
+        }
+      }).catch((err) => {
+        this.$message.error(err.response.data.msg);
+      });
     },
     //设置分区
     selectPartition(id) {
@@ -93,7 +91,7 @@ export default {
       this.videoList();
     },
     videoList() {
-      getVideoList(this.page, 15, this.pid).then((res) => {
+      getVideoList(this.page ,15, this.pid).then((res) => {
         if (res.data.code === 2000) {
           if (res.data.data.count !== 0) {
             this.count = res.data.data.count;
@@ -112,7 +110,18 @@ export default {
     this.parent = this.$route.query.parent;
     this.partition = this.$route.query.partition;
     this.getPartitionList(0);
+    if (this.parent != 0) {
+      this.getPartitionList(this.parent);
+      if (this.partition == 0) this.pid = this.parent;
+      else this.pid = this.partition;
+    }
     this.videoList();
+    // if (this.partition == 0) {
+    //   this.selectPartition(this.parent);
+    //   console.log(111)
+    // } else {
+    //   this.selectsubartition(this.partition);
+    // }
   },
   components: {
     "header-bar": HeaderBar,
