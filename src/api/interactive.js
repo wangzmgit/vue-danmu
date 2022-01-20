@@ -23,8 +23,3 @@ export const cancelCollect = (id) => {
     id = Number(id);
     return request.post('v1/interactive/collect/cancel', { id })
 }
-
-//获取点赞收藏关注的交互数据
-export const getInteractiveData = (vid) => {
-    return request.get('v1/interactive/video?vid=' + vid);
-}

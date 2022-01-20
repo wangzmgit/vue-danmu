@@ -29,6 +29,7 @@ export default {
       headers: {
         Authorization: "Bearer " + storage.get("token"),
       },
+      videos: []
     };
   },
   methods: {
@@ -47,8 +48,8 @@ export default {
       this.uploadingVideo = true;
       const status = info.file.status;
       if (status === "done") {
-        this.current = 2;
-        this.status = 800;
+        this.$parent.current = 2;
+        this.$parent.status = 800;
         this.$message.success("视频处理中");
       } else if (status === "error") {
         this.$message.error("文件上传失败");
@@ -63,13 +64,9 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 .upload-video {
   width: 350px;
   margin: 50px auto;
-}
-
-.page-box {
-  text-align: center;
 }
 </style>

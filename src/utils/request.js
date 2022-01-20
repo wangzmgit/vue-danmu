@@ -2,7 +2,7 @@ import axios from "axios";
 import config from "../config";
 import storage from "@/utils/stored-data.js";
 
-const URL = config.url + "/api/";
+const URL = config.url + "api/";
 export const CoverUrl = URL + "v1/file/cover";
 export const VideoUrl = URL + "v1/file/video";
 export const AvatarUrl = URL + "v1/file/avatar";

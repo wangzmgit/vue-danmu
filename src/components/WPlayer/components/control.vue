@@ -25,6 +25,18 @@
       <div class="control-center"></div>
       <!--控制栏右-->
       <div class="control-right">
+        <w-button class="res" type="text" @click="ShowMenu('res')">{{resText}}</w-button>
+        <div class="res-menu" v-show="menu.res">
+          <div v-if="$parent.original">
+            <w-button type="text" @click="SetRes('original')">原始</w-button>
+          </div>
+          <div v-else>
+            <w-button type="text" @click="SetRes('360')">360P</w-button>
+            <w-button v-show="$parent.maxRes >= 480" type="text" @click="SetRes(480)">480P</w-button>
+            <w-button v-show="$parent.maxRes >= 720" type="text" @click="SetRes(720)">720P</w-button>
+            <w-button v-show="$parent.maxRes >= 1080" type="text" @click="SetRes(1080)">1080P</w-button>
+          </div>
+        </div>
         <w-button class="speed" type="text" @click="ShowMenu('speed')">{{speedText}}</w-button>
         <div class="speed-menu" v-show="menu.speed">
           <w-button type="text" @click="SetSpeed(0.5)">0.5x</w-button>
@@ -71,13 +83,14 @@ export default {
       menu: {
         speed: false,
         volume: false,
+        res: false,
       },
       played: 0,
       loaded: 0,
       block: null, //拖拽DOM元素
       slider: null, //滚动条DOM元素
       isFull: false, //是否全屏
-      speedText:"倍速",//倍速文本
+      speedText: "倍速",//倍速文本
     };
   },
   methods: {
@@ -150,6 +163,10 @@ export default {
         this.speedText = "倍速";
       }
       this.menu.speed = false;
+    },
+    //设置分辨率
+    SetRes(res) {
+      this.$parent.SetRes(res);
     },
     //设置音量
     SetVolume() {
@@ -236,6 +253,10 @@ export default {
   computed:{
     left(){
       return this.$parent.$refs.videoOuterLayer.offsetLeft;
+    },
+    resText() {
+      if (this.$parent.original) return '原始';
+      return this.$parent.currentRes+ 'P';
     }
   },
   components: {
@@ -305,7 +326,7 @@ export default {
 .control-right {
   display: flex;
   justify-content: space-between;
-  width: 170px;
+  width: 230px;
 }
 
 .control-icon {
@@ -328,6 +349,22 @@ export default {
   width: 60px;
   bottom: 56px;
   right: 116px;
+  position: absolute;
+  text-align: center;
+  border-color: transparent;
+  border-radius: 5px;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.res {
+  padding: 0 10px;
+  margin-top: 8px;
+}
+
+.res-menu {
+  width: 60px;
+  bottom: 56px;
+  right: 156px;
   position: absolute;
   text-align: center;
   border-color: transparent;

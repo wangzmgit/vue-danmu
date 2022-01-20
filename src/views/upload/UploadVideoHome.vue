@@ -49,8 +49,8 @@ export default {
         title: "",
         cover: "",
         video: "",
-        introduction: "",
-        original: true,
+        desc: "",
+        copyright: true,
         partition: 0,
       },
       partitionName: "",//分区名称

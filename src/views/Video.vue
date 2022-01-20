@@ -4,29 +4,30 @@
     <div class="main">
       <div class="content-left">
         <div class="video-player">
-          <w-player v-if="showPlayer" :src="videoInfo.video" :vid="vid" :type="videoInfo.video_type"></w-player>
+          <!-- <w-player v-if="showPlayer" :src="videoInfo.video" :vid="vid" :type="videoInfo.video_type"></w-player> -->
+          <w-player :key="timer" v-if="showPlayer" :vid="vid" :options="options" />
           <div class="video-title-box">
             <p class="video-title">{{ videoInfo.title }}</p>
-            <p v-show="videoInfo.original" class="copyright"><a-icon style="color:#fd6d6f" type="stop" />未经作者授权，禁止转载</p>
+            <p v-show="videoInfo.copyright" class="copyright"><a-icon style="color:#fd6d6f" type="stop" />未经作者授权，禁止转载</p>
           </div>
           <div class="video-date">
             <!--点赞收藏-->
             <div class="interactive">
-              <i v-if="!interactive.like" class="iconfont icon-like like-not-activated" @click="_like()"/>
-              <i v-else class="iconfont icon-like" style="color:#eb2f96" @click="_dislike()"/>      
-              <p>{{data.like_count}}</p>
+              <i v-if="!interactive.like" class="iconfont icon-like like-not-activated" @click="likeClick"/>
+              <i v-else class="iconfont icon-like" style="color:#eb2f96" @click="dislikeClick"/>      
+              <p>{{videoInfo.like_count}}</p>
             </div>
             <div class="interactive">
-              <i v-if="!interactive.collect" class="iconfont icon-collect collect-not-activated" @click="_collect()"/>
-              <i v-else class="iconfont icon-collect" style="color:#faad14" @click="_cancelCollect()"/>
-              <p>{{data.collect_count}}</p>
+              <i v-if="!interactive.collect" class="iconfont icon-collect collect-not-activated" @click="collectClick"/>
+              <i v-else class="iconfont icon-collect" style="color:#faad14" @click="cancelCollectClick"/>
+              <p>{{videoInfo.collect_count}}</p>
             </div>
             <p>上传于{{ videoInfo.create_at | toTime }}</p>
             <p>{{videoInfo.clicks}}播放</p>
           </div>
           <!--视频简介-->
           <div class="introduction">
-            <div ref="introduction">{{videoInfo.introduction}}</div>
+            <div ref="introduction">{{videoInfo.desc}}</div>
             <a-button type="link" @click="toggle()">{{ more ? '展开更多' : '收起' }}</a-button>
           </div>
           <!--发表评论-->
@@ -75,6 +76,14 @@
             </div>
           </div>
         </div>
+        <!-- 视频分集 -->
+        <div class="resource" v-if="length > 1">
+          <div class="resource-item" v-for="(item, index) in videoInfo.resource" :key="index">
+            <div @click="changeResource(index)">
+              <span>{{ index + 1}}P</span>
+            </div>
+          </div>
+        </div>
         <!-- 弹幕列表 -->
         <div>
           <danmaku-list :vid="vid"></danmaku-list>
@@ -91,40 +100,45 @@ import WPlayer from "@/components/WPlayer/WPlayer.vue";
 import CommentList from "@/components/CommentList";
 import DanmakuList from "@/components/DanmakuList";
 import { getVideoInfo } from "@/api/video.js";
-import {like,dislike,collect,cancelCollect,getInteractiveData} from "@/api/interactive.js"
-import { follow,unfollow } from "@/api/follow.js";
+import { like, dislike,collect,cancelCollect} from "@/api/interactive.js"
+import { follow, unfollow } from "@/api/follow.js";
 import { getCommentList,comment } from "@/api/comment";
 import { utcToBeijing } from "@/utils/time.js";
 
 export default {
   data() {
     return {
+      timer: "",//刷新播放器
+      length: 0,//分集长度
       title: this.$config.title,
       showPlayer:false,
       vid: 0,
       authorID:0,
       videoInfo: [],
-      data:{
-        like_count:0,
-        collect_count:0,
-      },
       count:0,//评论总数
       page:1,//评论页码
       comments:[],//评论列表
-      interactive:[],
+      interactive:[],//交互数据(点赞、收藏、关注)
       loading: true,
       more: true, //展开简介
-      content:"",//评论内容
+      content: "",//评论内容
+      options: {
+        type: 'mp4',
+        resource: {}
+      }
     };
   },
   methods: {
-    _getVideoInfo(vid) {
+    getVideoInfoRequest(vid) {
       getVideoInfo(vid).then((res) => {
         if (res.data.code === 2000) {
-          var temp = res.data.data.video;
-          this.videoInfo = temp;
-          this.authorID = temp.author.uid;
-          this.data = temp.data;
+          let tempData = res.data.data;
+          this.videoInfo = tempData.video;
+          this.authorID = tempData.video.author.uid;
+          this.interactive = tempData.interactive;
+          this.options.type = tempData.video.video_type;
+          this.options.resource = tempData.video.resource[0];
+          this.length = tempData.video.resource.length;
           this.loading = false;
           this.showPlayer=true;
         }
@@ -132,55 +146,49 @@ export default {
         this.$message.error(err.response.data.msg);
       });
     },
-    _getInteractiveData(vid){
-      getInteractiveData(vid).then((res) =>{
-        if (res.data.code === 2000) {
-          this.interactive = res.data.data.data;
-        }
-      }).catch((err) => {
-        if (err.response.data.code != 401){
-          this.$message.error(err.response.data.msg);
-        }
-      });
+    //改变分集
+    changeResource(index) {
+      this.options.resource = this.videoInfo.resource[index];
+      this.timer = new Date().getTime();
     },
-    _like(){
+    likeClick(){
       like(this.vid).then((res) =>{
         if (res.data.code === 2000) {
           this.interactive.like = true;
-          this.data.like_count++;
+          this.videoInfo.like_count++;
           this.$message.success("点赞成功");
         }
       }).catch((err) => {
         this.$message.error(err.response.data.msg);
       });
     },
-    _dislike(){
+    dislikeClick(){
       dislike(this.vid).then((res) =>{
         if (res.data.code === 2000) {
           this.interactive.like = false;
-          this.data.like_count--;
+          this.videoInfo.like_count--;
           this.$message.success("取消点赞");
         }
       }).catch((err) => {
         this.$message.error(err.response.data.msg);
       });
     },
-    _collect(){
+    collectClick(){
       collect(this.vid).then((res) =>{
         if (res.data.code === 2000) {
           this.interactive.collect = true;
-          this.data.collect_count++;
+          this.videoInfo.collect_count++;
           this.$message.success("收藏成功");
         }
       }).catch((err) => {
         this.$message.error(err.response.data.msg);
       });
     },
-    _cancelCollect(){
+    cancelCollectClick(){
       cancelCollect(this.vid).then((res) =>{
         if (res.data.code === 2000) {
           this.interactive.collect = false;
-          this.data.collect_count--;
+          this.videoInfo.collect_count--;
           this.$message.success("取消收藏");
         }
       }).catch((err) => {
@@ -258,9 +266,7 @@ export default {
       if (to.params.vid != from.params.vid) {
         this.vid = to.params.vid;
         //重新加载数据
-        this._getVideoInfo(this.vid);
-        //获取交互信息
-        this._getInteractiveData(this.vid);
+        this.getVideoInfoRequest(this.vid);
         //获取评论
         this._getCommentList();
       }
@@ -268,11 +274,7 @@ export default {
   },
   created() {
     this.vid = Number(this.$route.params.vid);
-    this._getVideoInfo(this.vid);
-    //获取交互信息
-    if(this.userInfo){
-      this._getInteractiveData(this.vid);
-    }
+    this.getVideoInfoRequest(this.vid);
     //获取评论
     this._getCommentList();
   },
@@ -477,5 +479,24 @@ export default {
     }
   }
 }
+
+.resource {
+  display: flex;
+  flex-wrap: wrap;
+  .resource-item {
+    width: 20%;
+    height: 30px;
+    div {
+      width: 90%;
+      height: 96%;
+      display: flex;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      background-color: #e9e9e9;
+    }
+  }
+}
+
 
 </style>

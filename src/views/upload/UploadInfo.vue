@@ -19,7 +19,7 @@
         <a-input v-model="$parent.upload.title" placeholder="请输入视频标题" />
       </a-form-model-item>
       <a-form-model-item label="视频简介">
-        <a-input v-model="$parent.upload.introduction" :autosize="{ minRows: 4, maxRows: 4 }" :maxLength="100" placeholder="请输入视频简介，0-100个字符" type="textarea"/>
+        <a-input v-model="$parent.upload.desc" :autosize="{ minRows: 4, maxRows: 4 }" :maxLength="100" placeholder="请输入视频简介，0-100个字符" type="textarea"/>
       </a-form-model-item>
       <a-form-model-item label="分区">
         <div class="select-partition" v-if="$parent.status == 0">
@@ -37,7 +37,7 @@
         <span v-else> {{ $parent.partitionName }} </span>
       </a-form-model-item>
       <a-form-model-item label="禁止转载">
-        <a-switch v-model="$parent.upload.original" />
+        <a-switch v-model="$parent.upload.copyright" />
       </a-form-model-item>
       <div class="upload-next-btn">
         <a-button v-if="$parent.status == 0" type="primary" @click="uploadInfo()">下一步</a-button>
@@ -100,10 +100,10 @@ export default {
       }
     },
     uploadInfo() {
-                if(this.$parent.upload.partition === 0){
-            this.$message.error("请选择分区");
-            return;
-          }
+      if(this.$parent.upload.partition === 0){
+        this.$message.error("请选择分区");
+        return;
+      }
       this.$refs.upload.validate((valid) => {
         if (valid) {
           if(this.$parent.upload.partition === 0){
