@@ -4,7 +4,6 @@
     <div class="main">
       <div class="content-left">
         <div class="video-player">
-          <!-- <w-player v-if="showPlayer" :src="videoInfo.video" :vid="vid" :type="videoInfo.video_type"></w-player> -->
           <w-player :key="timer" v-if="showPlayer" :vid="vid" :options="options" />
           <div class="video-title-box">
             <p class="video-title">{{ videoInfo.title }}</p>

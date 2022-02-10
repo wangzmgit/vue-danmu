@@ -11,6 +11,11 @@ export const login = ({email,password}) => {
   return request.post('v1/user/login',{email,password});
 }
 
+//邮箱登录
+export const emailLogin = ({email,code}) => {
+  return request.post('v1/user/email/login',{email,code});
+}
+
 //获取用户信息
 export const getUserInfo = () => {
   return request.get('v1/user/info/get');

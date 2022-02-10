@@ -9,47 +9,80 @@
       </div>
       <div class="card-right">
         <div class="title">
-          <img src="../assets/logo.png" alt="logo" />
+          <!-- <img src="../assets/logo.png" alt="logo" /> -->
           <p>账号登录</p>
         </div>
-        <a-form-model ref="loginForm" :model="loginForm" :rules="rules" :label-col="{span:4,offset:1}" :wrapper-col="{span:15,offset:1}">
-          <a-form-model-item ref="email" label="邮箱" prop="email">
-            <a-input v-model="loginForm.email" />
-          </a-form-model-item>
-          <a-form-model-item ref="password" label="密码" prop="password">
-            <a-input v-model="loginForm.password" type="password" @keydown.enter="loginRequest()"/>
-          </a-form-model-item>
-          <div>
-            <a-button class="card-btn" type="primary" @click="loginRequest()">登录</a-button>
-            <a-button class="card-btn" @click="goRegister()">注册</a-button>
-          </div>
-        </a-form-model>
+        <div class="login-type">
+          <a-radio-group v-model="loginType" button-style="solid">
+            <a-radio-button value="password"> 密码登录 </a-radio-button>
+            <a-radio-button value="email"> 邮箱登录 </a-radio-button>
+          </a-radio-group>
+        </div>
+        <div v-if="loginType === 'password'">
+          <a-form-model ref="loginForm" :model="loginForm" :rules="rules" :label-col="label" :wrapper-col="wrapper">
+            <a-form-model-item ref="email" label="邮箱" prop="email">
+              <a-input v-model="loginForm.email" />
+            </a-form-model-item>
+            <a-form-model-item ref="password" label="密码" prop="password">
+              <a-input v-model="loginForm.password" type="password" @keydown.enter="loginRequest()"/>
+            </a-form-model-item>
+            <div>
+              <a-button class="card-btn" type="primary" @click="loginRequest()">登录</a-button>
+              <a-button class="card-btn" @click="goRegister()">注册</a-button>
+            </div>
+          </a-form-model>
+        </div>
+        <div v-else>
+          <a-form-model ref="emailLogin" :model="emailLogin" :rules="rules" :label-col="label" :wrapper-col="wrapper">
+            <a-form-model-item ref="email" label="邮箱" prop="email">
+              <a-input v-model="emailLogin.email" />
+            </a-form-model-item>
+            <a-form-model-item ref="password" label="验证码" prop="code">
+              <a-input class="code-input" v-model="emailLogin.code" @keydown.enter="emailLoginRequest()"/>
+              <a-button :disabled="disabled" type="primary" @click="sendCode()">{{text}}</a-button>
+            </a-form-model-item>
+            <div>
+              <a-button class="card-btn" type="primary" @click="emailLoginRequest()">登录</a-button>
+              <a-button class="card-btn" @click="goRegister()">注册</a-button>
+            </div>
+          </a-form-model>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { login } from "@/api/user";
+import { login, emailLogin } from "@/api/user";
+import { sendLoginCode } from "@/api/code"
 import storage from "@/utils/stored-data.js";
 export default {
   data() {
     return {
+      label: {span:4,offset:1},
+      wrapper: {span:15,offset:1},
+      loginType: "password",
       loginForm: {
         email: "",
         password: "",
       },
+      emailLogin:{
+        email: "",
+        code: "",
+      },
+      disabled:false,//禁用发送按钮
+      text:"发送验证码",
       rules: {
         email: [
           { required: true, message: "请输入邮箱", trigger: "blur" },
           { type: "email", message: "请输入正确的邮箱地址", trigger: "blur" },
         ],
         password: [{ required: true, message: "请输入密码", trigger: "blur" }],
+        code: [{ required: true, message: "请输入验证码", trigger: "blur" }],
       },
     };
   },
   methods:{
-
     loginRequest() {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
@@ -68,6 +101,50 @@ export default {
         } else {
           this.$message.error("请检查输入的数据");
         }
+      });
+    },
+    emailLoginRequest() {
+      this.$refs.emailLogin.validate((valid) => {
+        if (valid) {
+          emailLogin(this.emailLogin).then((res) => {
+            if(res.data.code === 2000){
+              //保存token和用户信息，并设置两周过期
+              storage.set("token", res.data.data.token, 14 * 24 * 60);
+              storage.set('userInfo',res.data.data.user, 14 * 24 * 60)
+              this.$router.push({ name: "Home" });
+            }else{
+              this.$message.error(res.data.msg);
+            }
+          }).catch((err) => {
+            this.$message.error(err.response.data.msg);
+          });
+        } else {
+          this.$message.error("请检查输入的数据");
+        }
+      });
+    },
+    sendCode(){
+      //禁用发送按钮
+      this.disabled = true;
+      sendLoginCode(this.emailLogin.email).then((res)=>{
+        if(res.data.code === 2000){
+          this.$message.success("发送成功");
+          //开启倒计时
+          let count = 0;
+          let tag = setInterval(() => {
+            if (++count >= 60) {
+              clearInterval(tag);
+              this.disabled = false;
+              this.text = "发送验证码";
+              return;
+            }
+            this.text = `${60 - count}秒后获取`;
+          }, 1000);
+        }
+      }).catch((err) => {
+        this.disabled = false;
+        this.text = "发送验证码";
+        this.$message.error(err.response.data.msg);
       });
     },
     goRegister(){
@@ -122,7 +199,7 @@ export default {
 
 .title {
   display: flex;
-  margin: 40px 20px 20px 0;
+  margin: 20px 20px 20px 0;
 }
 
 .title > img {
@@ -134,6 +211,18 @@ export default {
   font-size: 26px;
   padding-top: 16px;
   padding-left: 10px;
+  margin-bottom: 0;
+}
+
+/**登录类型 */
+.login-type {
+  margin: 22px 0;
+  text-align: center;
+}
+
+.code-input{
+  width: 160px;
+  margin-right: 20px;
 }
 
 .card-btn {

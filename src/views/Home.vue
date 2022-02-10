@@ -46,8 +46,6 @@
         <li v-if="config.mobile" class="split"></li>
         <li><a href="http://www.kuukaa.fun/deploy/env.html" target="_blank">文档</a></li>
         <li class="split"></li>
-        <li @click="about('Update')"><a>更新历史</a></li>
-        <li class="split"></li>
         <li @click="about('Opinion')"><a>意见反馈</a></li>
       </ul>
       <ul>

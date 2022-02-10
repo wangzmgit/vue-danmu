@@ -9,3 +9,8 @@ export const send = (email) => {
 export const sendToMyself = (email) => {
     return request.post('v1/code/send/myself', { email });
 }
+
+//发送登录验证码
+export const sendLoginCode = (email) => {
+    return request.post('v1/code/send/login', { email });
+}
