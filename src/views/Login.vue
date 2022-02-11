@@ -39,7 +39,7 @@
             </a-form-model-item>
             <a-form-model-item ref="password" label="验证码" prop="code">
               <a-input class="code-input" v-model="emailLogin.code" @keydown.enter="emailLoginRequest()"/>
-              <a-button :disabled="disabled" type="primary" @click="sendCode()">{{text}}</a-button>
+              <a-button :disabled="disabled" type="primary" @click="beforeSend()">{{text}}</a-button>
             </a-form-model-item>
             <div>
               <a-button class="card-btn" type="primary" @click="emailLoginRequest()">登录</a-button>
@@ -49,16 +49,19 @@
         </div>
       </div>
     </div>
+    <vcode :show="isShow" @success="onSuccess" @close="onClose"/>
   </div>
 </template>
 
 <script>
+import Vcode from "vue-puzzle-vcode";
 import { login, emailLogin } from "@/api/user";
 import { sendLoginCode } from "@/api/code"
 import storage from "@/utils/stored-data.js";
 export default {
   data() {
     return {
+      isShow: false, // 验证码框是否出现
       label: {span:4,offset:1},
       wrapper: {span:15,offset:1},
       loginType: "password",
@@ -123,11 +126,18 @@ export default {
         }
       });
     },
+    //打开滑块验证
+    beforeSend() {
+      if (this.emailLogin.email) {
+        this.isShow = true;
+      }
+    },
     sendCode(){
       //禁用发送按钮
       this.disabled = true;
       sendLoginCode(this.emailLogin.email).then((res)=>{
         if(res.data.code === 2000){
+          this.isShow = false;
           this.$message.success("发送成功");
           //开启倒计时
           let count = 0;
@@ -142,6 +152,7 @@ export default {
           }, 1000);
         }
       }).catch((err) => {
+        this.isShow = false;
         this.disabled = false;
         this.text = "发送验证码";
         this.$message.error(err.response.data.msg);
@@ -149,8 +160,17 @@ export default {
     },
     goRegister(){
       this.$router.push({ name: "Register" });
+    },
+    onSuccess(){
+      this.sendCode();
+    },
+    onClose(){
+      this.isShow = false;
     }
-  }
+  },
+  components:{
+    'vcode': Vcode
+  },
 };
 </script>
 
