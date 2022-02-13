@@ -8,16 +8,62 @@
         <a-input-search v-model="keywords" v-show="this.$route.name != 'Search'" placeholder="搜索关键词~" @search="search()"/>
       </div>
       <div v-if="userInfo" class="header-user">
-        <a-avatar v-if="userInfo.avatar" :size="40" :src="userInfo.avatar" />
-        <a-avatar v-else :size="40" icon="user" />
-        <a-button type="link" @click="headerRouter('Space')">{{userInfo.name}}</a-button>
-        <a-button type="link" @click="logout()">退出</a-button>
+        <div class="avatar-box" @click="headerRouter('Space')">
+          <a-avatar v-if="userInfo.avatar" :size="40" :src="userInfo.avatar" />
+          <a-avatar v-else :size="40" icon="user" />
+          <div class="header-menu">
+            <div class="menu-item">
+              <span class="logout" @click="headerRouter('Space')">{{userInfo.name}}</span>
+            </div>
+            <div class="menu-item">
+              <span class="logout" @click="logout()">退出登录</span>
+            </div>
+          </div>
+        </div>
+        <div class="icon-box">
+          <div class="icon-item" @click="headerRouter('Messages')" @mouseenter="message=true" @mouseleave="message=false">
+            <div class="icon-only header-icon" :class="message?'change-top':'change-bottom'">
+              <a-icon type="message" style="color: #c79fa7"/>
+            </div>
+            <div class="icon-text header-icon" :class="message?'change-top':'change-bottom'">
+              <a-icon type="message" style="color: #c79fa7"/>
+              <span>消息</span>
+            </div>
+          </div>
+          <div class="icon-item" @click="headerRouter('Collect')" @mouseenter="collect=true" @mouseleave="collect=false">
+            <div class="icon-only header-icon" :class="collect?'change-top':'change-bottom'">
+              <a-icon type="star" style="color: #e3c0aa"/>
+            </div>
+            <div class="icon-text header-icon" :class="collect?'change-top':'change-bottom'">
+              <a-icon type="star" style="color: #e3c0aa"/>
+              <span>收藏</span>
+            </div>
+          </div>
+        </div>
         <a-button type="primary" icon="to-top" @click="headerRouter('Upload')">投稿</a-button>
       </div>
       <div v-else class="header-user">
-        <a-avatar :size="40">登录</a-avatar>
-        <a-button type="link" @click="headerRouter('Login')">登录</a-button>
-        <a-button type="link" @click="headerRouter('Register')">注册</a-button>
+        <a-button type="link" @click="headerRouter('Login')">登录/注册</a-button>
+        <div class="icon-box">
+          <div class="icon-item" @click="headerRouter('Messages')" @mouseenter="message=true" @mouseleave="message=false">
+            <div class="icon-only header-icon" :class="message?'change-top':'change-bottom'">
+              <a-icon type="message" style="color: #c79fa7"/>
+            </div>
+            <div class="icon-text header-icon" :class="message?'change-top':'change-bottom'">
+              <a-icon type="message" style="color: #c79fa7"/>
+              <span>消息</span>
+            </div>
+          </div>
+          <div class="icon-item" @click="headerRouter('Collect')" @mouseenter="collect=true" @mouseleave="collect=false">
+            <div class="icon-only header-icon" :class="collect?'change-top':'change-bottom'">
+              <a-icon type="star" style="color: #e3c0aa"/>
+            </div>
+            <div class="icon-text header-icon" :class="collect?'change-top':'change-bottom'">
+              <a-icon type="star" style="color: #e3c0aa"/>
+              <span>收藏</span>
+            </div>
+          </div>
+        </div>
         <a-button type="primary" icon="to-top" @click="headerRouter('Login')">投稿</a-button>
       </div>
     </div>
@@ -29,6 +75,8 @@ import storage from "@/utils/stored-data.js";
 export default {
   data(){
     return{
+      collect: false,
+      message: false,
       keywords:"",
     }
   },
@@ -49,7 +97,7 @@ export default {
     },
     search(){
       this.$router.push({ name: "Search", params: { keywords: this.keywords } });
-    }
+    },
   }
 };
 </script>
@@ -83,17 +131,14 @@ export default {
   width: 100%;
 }
 
-.logo img:hover{
-  cursor:pointer;
-  width: 102%;
-}
-
 .search-box {
   width: 300px;
   margin-top: 9px;
 }
 
 .header-user {
+  display: flex;
+  flex-wrap: nowrap;
   margin-top: 5px;
 }
 
@@ -106,6 +151,129 @@ export default {
   top: 3px;
   margin: 0 1px;
   font-size: 16px;
+}
+
+/* 头像 头像菜单 */
+.avatar-box {
+  position: relative;
+  cursor: pointer;
+  margin: 0 10px;
+}
+
+.header-menu {
+  display: none;
+  width: 200px;
+  height: 100px;
+  top: 40px;
+  left: -80px;
+  position: absolute;
+  z-index: 999;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 30px rgb(0 0 0 / 10%);
+}
+
+.avatar-box:hover .header-menu {
+  display: block;
+}
+
+.menu-item {
+  margin-top: 7px;
+  width: 160px;
+  height: 36px;
+  margin-left: 20px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* 退出按钮 */
+.logout {
+  display: block;
+  color: #18191b;
+  line-height: 36px;
+  text-align: left;
+  border-radius: 6px;
+  padding-left: 6px;
+}
+
+.logout:hover {
+  background-color: #c9ccd0;
+}
+
+/* 跳转图标 */
+.icon-box {
+  width: 120px;
+  display: flex;
+  margin-right: 10px;
+  justify-content: space-around;
+}
+
+.icon-item {
+  height: 40px;
+  width: 40px;
+  overflow: hidden;
+  position: relative;
+}
+
+.header-icon {
+  display: flex;
+  width: 40px;
+  height: 40px;
+  margin-right: 30px;
+  cursor: pointer;
+  flex-direction: column;
+  justify-content: space-around;
+  text-align: center;
+}
+
+.icon-only {
+  font-size: 26px;
+  /* padding-top: 7px; */
+  position: absolute;
+  top: -0px;
+}
+
+.icon-text {
+  position: absolute;
+  top: 40px;
+}
+
+.icon-text>i {
+  font-size: 18px;
+}
+
+.icon-text>span {
+  font-size: 12px;
+}
+
+.change-top {
+  animation: topIcon 0.3s;
+  animation-fill-mode: forwards;
+}
+
+.change-bottom {
+  animation: bottomIcon 0.3s;
+  animation-fill-mode: forwards;
+}
+
+/* 动画 */
+@keyframes topIcon {
+  0% {
+    margin-top: 0px;
+  }
+  100% {
+    margin-top: -40px;
+  }
+}
+@keyframes bottomIcon {
+  0% {
+    margin-top: -40px;
+  }
+  100% {
+    margin-top: 0px;
+  }
 }
 
 /*屏幕宽度大于1600px时的布局*/
