@@ -30,11 +30,11 @@
           <div v-if="$parent.original">
             <w-button type="text" @click="SetRes('original')">原始</w-button>
           </div>
-          <div v-else>
-            <w-button type="text" @click="SetRes('360')">360P</w-button>
-            <w-button v-show="$parent.maxRes >= 480" type="text" @click="SetRes(480)">480P</w-button>
-            <w-button v-show="$parent.maxRes >= 720" type="text" @click="SetRes(720)">720P</w-button>
+          <div v-else>                    
             <w-button v-show="$parent.maxRes >= 1080" type="text" @click="SetRes(1080)">1080P</w-button>
+            <w-button v-show="$parent.maxRes >= 720" type="text" @click="SetRes(720)">720P</w-button>
+            <w-button v-show="$parent.maxRes >= 480" type="text" @click="SetRes(480)">480P</w-button>
+            <w-button type="text" @click="SetRes('360')">360P</w-button>
           </div>
         </div>
         <w-button class="speed" type="text" @click="ShowMenu('speed')">{{speedText}}</w-button>
