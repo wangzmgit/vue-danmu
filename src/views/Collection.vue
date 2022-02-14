@@ -4,7 +4,7 @@
     <div class="main">
       <div class="content-left">
         <div class="video-player">
-          <w-player :key="timer" v-if="showPlayer" :src="videoInfo.video" :vid="vid" :type="videoInfo.video_type"></w-player>
+          <w-player :key="timer" v-if="showPlayer" :vid="vid" :options="options" ></w-player>
           <div class="author" v-if="!loading">
             <!--头像-->
             <div class="author-avatar">
@@ -75,13 +75,20 @@ export default {
       title: this.$config.title,
       showPlayer: false, 
       disabled: false,//禁用加载更多
+      options: {
+        type: 'mp4',
+        resource: {}
+      }
     };
   },
   methods: {
     getVideoInfoRequest() {
       getVideoInfo(this.vid).then((res) => {
         if (res.data.code === 2000) {
-          this.videoInfo = res.data.data.video;
+          let tempData = res.data.data;
+          this.videoInfo = tempData.video;
+          this.options.type = tempData.video.video_type;
+          this.options.resource = tempData.video.resource[0];
           this.showPlayer=true;
           this.timer = new Date().getTime();
         }
