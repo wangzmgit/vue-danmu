@@ -1,6 +1,6 @@
 # 弹幕网站前端
 
-[项目地址](http://47.98.224.169/#/)
+[文档](http://www.kuukaa.fun)
 
 [新版后端地址](https://gitee.com/wzmgit/go-danmu)
 

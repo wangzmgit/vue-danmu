@@ -211,7 +211,10 @@ export default {
     GetDanmaku(){
       GetDanmakuAPI(this.vid).then((res) => {
         if (res.data.code === 2000) {
-          this.danmakuList = res.data.data.danmaku;
+          let tempDanmaku = res.data.data.danmaku;
+          this.danmakuList = tempDanmaku.sort((a,b) => {
+            return a.time - b.time;
+          });
           this.amount = this.danmakuList.length;
         }
       });

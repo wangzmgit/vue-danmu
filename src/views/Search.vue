@@ -7,10 +7,10 @@
     <div class="result">
       <p>共找到{{ len }}条结果</p>
       <div class="card-list">
-        <div class="card-box" v-for="(item, index) in videos" :key="index">
+        <div class="v-card" v-for="(item, index) in videos" :key="index">
           <div class="card" @click="video(item.vid)">
             <img :src="item.cover" />
-            <div class="result-title">
+            <div class="title">
               <p v-html="keyHighlight(item.title)"></p>
             </div>
           </div>
@@ -33,39 +33,53 @@ export default {
   },
   methods: {
     _search() {
-      this.$router.push({name: "Search",params: { keywords: this.keywords }});
-    },
-    _searchVideo() {
-      searchVideo(this.keywords).then((res) => {
-        if (res.data.code === 2000) {
-          this.videos = res.data.data.videos;
-          this.len = this.videos.length;
-        }
-      }).catch((err) => {
-        this.$message.error(err.response.data.msg);
+      this.$router.push({
+        name: "Search",
+        params: { keywords: this.keywords },
       });
     },
+    _searchVideo() {
+      searchVideo(this.keywords)
+        .then((res) => {
+          if (res.data.code === 2000) {
+            this.videos = res.data.data.videos;
+            this.len = this.videos.length;
+          }
+        })
+        .catch((err) => {
+          this.$message.error(err.response.data.msg);
+        });
+    },
     keyHighlight(title) {
-      title = title + "";
-      var array = this.keywords.split(" ");
-      var irreplaceable = '<font color="#409EFF"></font>';
-      // 匹配关键字正则
-      for (var i = 0; i < array.length; i++) {
-        if (array[i] == "") {
-          continue;
+      let res = '';
+      let indexArr = []; // 需要标红的字的下标数组
+      const keywordsArray = this.keywords.split(" ");
+      const getReplaceStr = (str) => `<font color="#409EFF">${str}</font>`;
+      keywordsArray.forEach((keyword) => {
+        let filterStr = title;
+        let stopFlag = false;
+        while (!stopFlag && filterStr && keyword) {
+          const index = filterStr.indexOf(keyword); // 返回匹配的第一个字符的下标
+          if (index === -1) stopFlag = true;
+          else {
+            keyword.split("").forEach((s, i) => {
+              indexArr.push(index + Number(i));
+            });
+            filterStr =
+              filterStr.substring(0, index) +
+              " " +
+              filterStr.substring(index + 1);
+          }
         }
-        //防止替换掉替换过的内容
-        if (irreplaceable.indexOf(array[i]) != -1) {
-          continue;
-        }
-        var replaceReg = new RegExp(array[i], "g");
-        var replaceString = '<font color="#409EFF">' + array[i] + "</font>";
-        title = title.replace(replaceReg, replaceString);
-      }
-      return title;
+      });
+      indexArr = Array.from(new Set(indexArr)); // 去重
+      title.split("").forEach((char, charIndex) => {
+        res += indexArr.includes(charIndex) ? getReplaceStr(char) : char;
+      });
+      return res;
     },
     //页面跳转
-    video(vid){
+    video(vid) {
       this.$router.push({ name: "Video", params: { vid: vid } });
     },
   },
@@ -110,49 +124,46 @@ export default {
   flex-wrap: wrap;
 }
 
-.card-box {
-  width: 20%;
-  height: 180px;
-  padding: 8px 5px;
+.v-card {
+  width: 19%;
+  height: 150px;
+  margin-left: 1%;
 }
 
 .card {
   position: relative;
   overflow: hidden;
-  border-top-left-radius: 6px;
-  border-top-right-radius: 6px;
+  border-radius: 2px;
 }
 
-.card > img {
+.card>img {
   top: 0;
   left: 0;
   width: 100%;
-  height: 120px;
+  height: 130px;
 }
 
-.result-title {
-  height: 44px;
-  border: 1px solid #808080;
-  border-top: 0;
-  border-bottom-left-radius: 6px;
-  border-bottom-right-radius: 6px;
+.title{
+  position: absolute;
+  bottom: 0;
+  height: 30px;
+  width: 100%;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.5), transparent);
 }
 
-.result-title > p {
+.title>p{
   font-size: 14px;
-  line-height: 16px;
-  padding-top: 6px;
-  margin-bottom: 2px;
-  color: #808080;
+  color: #fff;
+  padding-left: 5px;
   overflow: hidden;
-  text-overflow: ellipsis;
+  text-overflow: ellipsis; 
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
 }
 
 /*屏幕宽度大于1600px时的布局*/
-@media screen and (min-width:1600px) {
+@media screen and (min-width: 1600px) {
   .result {
     width: 1500px;
   }

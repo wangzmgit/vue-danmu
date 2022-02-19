@@ -6,14 +6,21 @@
     </div>
     <!--弹幕设置-->
     <div v-show="menu" class="danmaku-menu">
-      <p class="danmaku-menu-title">弹幕颜色</p>
+      <div class="danmaku-menu-top">
+        <p class="danmaku-menu-title">弹幕颜色</p>
+        <div class="customize-color">
+          <span style="color: #fff">#</span>
+          <input type="text" v-model="danForm.color" maxlength="6">
+          <div :style="`background-color: #${danForm.color}`"></div>
+        </div>
+      </div>
       <div class="color-btn">
-        <div @click="SetColor('#808080')"></div>
-        <div @click="SetColor('#e54256')"></div>
-        <div @click="SetColor('#ffe133')"></div>
-        <div @click="SetColor('#64DD17')"></div>
-        <div @click="SetColor('#39ccff')"></div>
-        <div @click="SetColor('#D500F9')"></div>
+        <div @click="SetColor('fff')"></div>
+        <div @click="SetColor('e54256')"></div>
+        <div @click="SetColor('ffe133')"></div>
+        <div @click="SetColor('64dd17')"></div>
+        <div @click="SetColor('39ccff')"></div>
+        <div @click="SetColor('d500f9')"></div>
       </div>
       <p class="danmaku-menu-title">弹幕类型</p>
       <div class="danmaku-type">
@@ -45,7 +52,7 @@ export default {
     return{
       danForm:{
         text:"",
-        color:"#fff",
+        color:"fff",
         type:0,
       },
       menu:false,
@@ -76,6 +83,11 @@ export default {
     Send(){
       if(this.danForm.text == ""){
         this.$parent.ShowMessage("弹幕内容不能为空");
+        return;
+      }
+      //验证颜色
+      let reg = new RegExp("^([0-9a-fA-F]{6}|[0-9a-fA-F]{3})$");
+      if (this.danForm.color.match(reg) == null){
         return;
       }
       this.$parent.Send(this.danForm);
@@ -155,9 +167,41 @@ export default {
   height: 240px;
 }
 
+.danmaku-menu-top {
+  display: flex;
+  height: 46px;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .danmaku-menu-title {
   color: #fff;
   margin: 12px 0 12px 10px;
+}
+
+.customize-color {
+  display: flex;
+  align-items: center;
+}
+
+.customize-color > input{
+  width: 80px;
+  height: 24px;
+  margin: 0 8px 0 2px;
+  background-color: transparent;
+  color: #fff;
+  border: 1px solid rgba(161, 161, 161, 0.2);
+}
+
+.customize-color > input:focus {
+  border: 1px solid rgba(161, 161, 161, 0.2);
+}
+
+.customize-color > div{
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  margin-right: 8px;
 }
 
 .color-btn {

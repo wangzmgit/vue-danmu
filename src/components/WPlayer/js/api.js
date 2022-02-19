@@ -2,6 +2,7 @@ import request from '@/utils/request'
 
 //发送弹幕
 export const SendDanmakuAPI = (vid,time,color,type,text) => {
+    color = "#" + color;
     return request.post('v1/danmaku/send', { vid,time,color,type,text });
 }
 

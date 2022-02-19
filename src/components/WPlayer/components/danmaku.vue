@@ -46,6 +46,9 @@ export default {
         }
         let len = this.danmakuList.length;
         for (let i = 0; i < len; i++) {
+          if (this.danmakuList[i].time > this.currentTime) {
+            return;
+          }
           if (this.danmakuList[i].time == this.currentTime) {
             this.DrawDanmaku(this.danmakuList[i])
           }
