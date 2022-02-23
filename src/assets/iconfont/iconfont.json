@@ -6,6 +6,20 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "3703982",
+      "name": "emoji",
+      "font_class": "emoji",
+      "unicode": "e67b",
+      "unicode_decimal": 59003
+    },
+    {
+      "icon_id": "10746997",
+      "name": "image",
+      "font_class": "image",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
       "icon_id": "2154213",
       "name": "播放数_32",
       "font_class": "views",

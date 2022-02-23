@@ -23,7 +23,7 @@
           <div v-if="item.from_id == userInfo.uid">
             <a-avatar class="avatar-right" v-if="userInfo.avatar" :size="45" :src="userInfo.avatar" />
             <a-avatar class="avatar-right" v-else :size="45" icon="user" />
-            <span class="content-right">{{item.content}}</span>
+            <span class="content-right" v-html="$options.filters.toEmoji(item.content)"></span>
           </div>
           <!--收到的-->
           <div v-else>
@@ -35,9 +35,18 @@
           </div>
         </div>
       </div>
+      <div class="emoji-area">
+        <div>
+          <i class="iconfont icon-emoji" @click="emoji = !emoji"/>  
+        </div>
+      </div>
       <div class="msg-input">
-        <a-input v-model="msg.content" :autosize="{ minRows: 4, maxRows: 4 }" :maxLength="250" placeholder="发个消息呗~" type="textarea"/>
-        <a-button type="primary" :disabled="disabled" @click="_sendMsg()">发送</a-button>
+      <emoji-selector class="choose-emoji" v-show="emoji" :emojiWidth="emojiWidth" @chooseEmoji="chooseEmoji" />
+        <textarea v-model="msg.content" placeholder="发个消息呗~" maxLength="255"  />
+        <div class="btn-box">
+          <span>{{ msg.content.length }}/255</span>
+          <button type="primary" :disabled="disabled" @click="_sendMsg()">发送</button>
+        </div>
       </div>
     </div>
   </div>
@@ -47,6 +56,8 @@
 import storage from "@/utils/stored-data.js";
 import { toRelativeTime } from "@/utils/time.js";
 import { getMsgList,getMsgDetails,sendMsg } from "@/api/message";
+import EmojiSelector from '@/components/Emoji/EmojiSelector';
+import { analyzeEmoji } from "@/components/Emoji/EmojiConversion";
 export default {
   computed: {
     userInfo() {
@@ -55,6 +66,8 @@ export default {
   },
   data() {
     return {
+      emoji: false,//是否显示emoji选择
+      emojiWidth: "570px",
       msg:{
         fid:0,
         content:""
@@ -90,6 +103,7 @@ export default {
       });
     },
     _sendMsg(){
+      this.emoji = false;
       this.disabled = true;
       sendMsg(this.msg).then((res) => {
         if (res.data.code === 2000) { 
@@ -102,8 +116,14 @@ export default {
         this.$message.error(err.response.data.msg);
         this.disabled = false;
       });
-      
-    }
+    },
+    chooseEmoji(value) {
+      this.msg.content += "[" + value + "]";
+      this.emoji = false;
+    },
+  },
+  components: {
+    "emoji-selector": EmojiSelector
   },
   created(){
     if (this.$route.params.fid) {
@@ -116,6 +136,9 @@ export default {
   filters:{
     toTime(time){
       return toRelativeTime(time);
+    },
+    toEmoji(val) {
+      return analyzeEmoji(val);
     }
   }
 };
@@ -146,7 +169,7 @@ export default {
 }
 
 .msg-user-item:hover{
-  background-color: #f0f0f0;
+  background-color: #f7f7f7;
 }
 
 .msg-avatar{
@@ -168,7 +191,7 @@ export default {
 }
 
 .msg-right{
-  width: 670px;
+  width: calc(100% - 200px);
 }
 
 .right-top{
@@ -178,8 +201,8 @@ export default {
 }
 
 .msg-main{
-  height: 460px;
-  background-color: #f0f0f0; 
+  height: 440px;
+  background-color: #f7f7f7; 
   border-bottom: 1px solid #b8b8b8;
   overflow-y: auto;
 
@@ -217,7 +240,7 @@ export default {
     max-width: 80%;
     margin-right: 10px;
     margin-top: 6px;
-    background: rgb(68, 165, 133);
+    background-color: #40a9ff;
     color: #fff;
     font-size: 16px;
     border-radius: 3px;
@@ -242,14 +265,60 @@ export default {
   }
 }
 
-.msg-input{
-  textarea{
-    margin: 10px 0 0 2px;
-  }
-
-  button{
-    float: right;
-    margin: 8px 10px 0 0;
+/**emoji选择 */
+.emoji-area {
+  div {
+    height: 36px;
+    i {
+      cursor: pointer;
+      color: #999999;
+      font-size: 32px;
+      line-height: 36px;
+      margin: 0 10px;
+      &:hover {
+        color: #373737;
+      }
+    }
   }
 }
+
+.msg-input{
+  position: relative;
+
+  .choose-emoji {
+    top: -236px;
+  }
+
+  textarea{
+    resize: none;
+    height: 90px;
+    width: calc(100% - 10px);
+    outline: none;
+    margin: 0 10px;
+    border-radius: 6px;
+    border: 1px solid #b8b8b8;
+  }
+
+  .btn-box {
+    height: 36px;
+    display: flex;
+    margin-left: 10px;
+    align-items: center;
+    justify-content: space-between;
+    button{
+      width: 100px;
+      height: 30px;
+      color: #fff;
+      background-color: #1890ff;
+      cursor: pointer;
+      border-radius: 6px;
+      border: 1px solid #e7e7e7;
+      &:hover {
+        background-color: #40a9ff;
+      }
+    }
+  }
+}
+
+
 </style>
