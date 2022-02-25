@@ -17,7 +17,7 @@
     <!--右侧-->
     <div class="msg-right">
       <div class="left-top right-top">{{currentUser.name}}</div>
-      <div class="msg-main">
+      <div ref="msgBox" class="msg-main" @change="toBottom()">
         <div v-for="(item,index) in currentMsgDetails" :key="index" class="content-box">
           <!--自己发送的-->
           <div v-if="item.from_id == userInfo.uid">
@@ -39,10 +39,11 @@
         <div>
           <i class="iconfont icon-emoji" @click="emoji = !emoji"/>  
         </div>
+        <button class="to-bottom-btn" @click="toBottom()">回到底部</button>
       </div>
       <div class="msg-input">
       <emoji-selector class="choose-emoji" v-show="emoji" :emojiWidth="emojiWidth" @chooseEmoji="chooseEmoji" />
-        <textarea v-model="msg.content" placeholder="发个消息呗~" maxLength="255"  />
+        <textarea v-model="msg.content" placeholder="发个消息呗~" maxLength="255" @keydown.enter="_sendMsg()" />
         <div class="btn-box">
           <span>{{ msg.content.length }}/255</span>
           <button type="primary" :disabled="disabled" @click="_sendMsg()">发送</button>
@@ -53,7 +54,9 @@
 </template>
 
 <script>
+import { Base64 } from 'js-base64';
 import storage from "@/utils/stored-data.js";
+import { MsgSocket } from "@/utils/request.js";
 import { toRelativeTime } from "@/utils/time.js";
 import { getMsgList,getMsgDetails,sendMsg } from "@/api/message";
 import EmojiSelector from '@/components/Emoji/EmojiSelector';
@@ -66,6 +69,8 @@ export default {
   },
   data() {
     return {
+      websocket: null,
+      SocketURL: MsgSocket,
       emoji: false,//是否显示emoji选择
       emojiWidth: "570px",
       msg:{
@@ -121,6 +126,27 @@ export default {
       this.msg.content += "[" + value + "]";
       this.emoji = false;
     },
+    //初始化weosocket
+    initWebSocket(){ 
+      //处理协议部分
+      let reg = new RegExp('^http(s)?:')
+      const wsurl = this.SocketURL.replace(reg,"ws:") + "?token=" + storage.get("token");
+      this.websocket = new WebSocket(wsurl);
+      this.websocket.onmessage = this.websocketOnmessage;
+    },
+    //数据接收
+    websocketOnmessage(e){ 
+      const res = JSON.parse(Base64.decode(e.data));
+      if (this.msg.fid === res.fid) {
+        this.currentMsgDetails.push({
+          form_id: res.fid,
+          content: res.content,
+        });
+      }
+    }, 
+    toBottom() {
+      this.$refs.msgBox.scrollTop = this.$refs.msgBox.scrollHeight
+    },
   },
   components: {
     "emoji-selector": EmojiSelector
@@ -131,7 +157,11 @@ export default {
       this.msg.fid = fid;
       this._getMsgDetails(fid);
     }
+    this.initWebSocket();
     this._getMsgList();
+  },
+  beforeDestroy() {
+    this.websocket.close();
   },
   filters:{
     toTime(time){
@@ -267,7 +297,11 @@ export default {
 
 /**emoji选择 */
 .emoji-area {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   div {
+    width: 36px;
     height: 36px;
     i {
       cursor: pointer;
@@ -278,6 +312,21 @@ export default {
       &:hover {
         color: #373737;
       }
+    }
+  }
+
+  .to-bottom-btn{
+    height: 24px;
+    line-height: 16px;
+    cursor: pointer;
+    background-color: #fff;
+    color: #1890ff;
+    border-radius: 4px;
+    border: 1px solid #1890ff;
+
+    &:hover {
+      color: #40a9ff;
+      border-color: #40a9ff;
     }
   }
 }

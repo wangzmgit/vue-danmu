@@ -6,6 +6,7 @@ const URL = config.url + "api/";
 export const CoverUrl = URL + "v1/file/cover";
 export const VideoUrl = URL + "v1/file/video";
 export const AvatarUrl = URL + "v1/file/avatar";
+export const MsgSocket = URL + "v1/message/ws";
 
 const service = axios.create({
     baseURL: URL,
