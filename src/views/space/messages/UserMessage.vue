@@ -128,10 +128,14 @@ export default {
     },
     //初始化weosocket
     initWebSocket(){ 
-      //处理协议部分
-      let reg = new RegExp('^http(s)?:')
-      const wsurl = this.SocketURL.replace(reg,"ws:") + "?token=" + storage.get("token");
-      this.websocket = new WebSocket(wsurl);
+      if (this.SocketURL === "/api/v1/message/ws") {
+        this.SocketURL = "ws://" + window.location.host + "/api/v1/message/ws";
+      } else {
+        //处理协议部分
+        let reg = new RegExp('^http(s)?:')
+        this.SocketURL = this.SocketURL.replace(reg,"ws:") + "?token=" + storage.get("token");
+      }
+      this.websocket = new WebSocket(this.SocketURL);
       this.websocket.onmessage = this.websocketOnmessage;
     },
     //数据接收
