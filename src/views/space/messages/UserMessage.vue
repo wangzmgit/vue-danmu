@@ -133,8 +133,9 @@ export default {
       } else {
         //处理协议部分
         let reg = new RegExp('^http(s)?:')
-        this.SocketURL = this.SocketURL.replace(reg,"ws:") + "?token=" + storage.get("token");
+        this.SocketURL = this.SocketURL.replace(reg,"ws:");
       }
+      this.SocketURL = this.SocketURL + "?token=" + storage.get("token")
       this.websocket = new WebSocket(this.SocketURL);
       this.websocket.onmessage = this.websocketOnmessage;
     },
