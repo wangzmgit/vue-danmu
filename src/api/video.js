@@ -11,9 +11,9 @@ export const getVideoStatus = (vid) => {
 }
 
 //修改视频信息
-export const updateVideoInfo = ({ vid, title, cover, introduction, original }) => {
+export const updateVideoInfo = ({ vid, title, cover, desc, copyright }) => {
   let id = Number(vid);
-  return request.post('v1/video/update', { id, title, cover, introduction, original });
+  return request.post('v1/video/update', { id, title, cover, desc, copyright });
 }
 
 //删除视频
