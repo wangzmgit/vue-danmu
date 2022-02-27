@@ -89,7 +89,7 @@ export default {
     _follow() {
       follow(this.uid).then((res) => {
         if (res.data.code === 2000) {
-          this.interactive.follow = true;
+          this.follow = true;
           this.$message.success("关注成功");
         }
       }).catch((err) => {
@@ -99,7 +99,7 @@ export default {
     _unfollow() {
       unfollow(this.uid).then((res) => {
         if (res.data.code === 2000) {
-          this.interactive.follow = false;
+          this.follow = false;
           this.$message.success("取消关注");
         }
       }).catch((err) => {
