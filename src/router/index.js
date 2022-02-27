@@ -33,12 +33,6 @@ const baseRoutes = [{
 },
 /**关于 */
 {
-    path: '/about/update',
-    name: 'Update',
-    component: () =>
-        import('../views/about/Update.vue'),
-},
-{
     path: '/about/opinion',
     name: 'Opinion',
     component: () =>
