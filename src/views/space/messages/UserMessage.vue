@@ -6,7 +6,7 @@
       <!--list-->
       <div v-for="(item,index) in msgList" :key="index">
         <!--item-->
-        <div class="msg-user-item" @click="_getMsgDetails(item.uid)">
+        <div class="msg-user-item" @click="getMsgContent(item.uid)">
           <a-avatar class="msg-avatar" v-if="item.avatar" :size="45" :src="item.avatar" />
           <a-avatar class="msg-avatar" v-else :size="45" icon="user" />
           <span class="msg-name">{{item.name}}</span>
@@ -17,7 +17,7 @@
     <!--右侧-->
     <div class="msg-right">
       <div class="left-top right-top">{{currentUser.name}}</div>
-      <div ref="msgBox" class="msg-main" @change="toBottom()">
+      <div id="msgBox" class="msg-main">
         <div v-for="(item,index) in currentMsgDetails" :key="index" class="content-box">
           <!--自己发送的-->
           <div v-if="item.from_id == userInfo.uid">
@@ -42,7 +42,7 @@
         <button class="to-bottom-btn" @click="toBottom()">回到底部</button>
       </div>
       <div class="msg-input">
-      <emoji-selector class="choose-emoji" v-show="emoji" :emojiWidth="emojiWidth" @chooseEmoji="chooseEmoji" />
+      <emoji-selector class="choose-emoji" v-show="emoji" emojiWidth="570px" @chooseEmoji="chooseEmoji" />
         <textarea v-model="msg.content" placeholder="发个消息呗~" maxLength="255" @keydown.enter="_sendMsg()" />
         <div class="btn-box">
           <span>{{ msg.content.length }}/255</span>
@@ -71,19 +71,22 @@ export default {
     return {
       websocket: null,
       SocketURL: MsgSocket,
-      emoji: false,//是否显示emoji选择
-      emojiWidth: "570px",
       msg:{
         fid:0,
         content:""
       },
       msgList:[],
-      currentMsgDetails:[],
+      page: 1,
       currentUser:{
         name:"",
         avatar:"",
       },
-      disabled:false,//禁用发送按钮
+      currentMsgDetails:[],
+      loading: false,//是否正在加载
+      noMore: false,//是否禁用加载更多
+      emoji: false,//是否显示emoji选择
+      disabled:false,//是否禁用发送按钮
+      allowToBottom: true,//是否允许自动跳转到底部
     };
   },
   methods:{
@@ -92,19 +95,39 @@ export default {
         if (res.data.code === 2000) {
           this.msgList = res.data.data.messages;
           if(this.msg.fid === 0 && this.msgList.length > 0){  
-            this._getMsgDetails(this.msgList[0].uid);
+            this.getMsgContent(this.msgList[0].uid);
           }
         }
       });
     },
-    _getMsgDetails(fid){
-      getMsgDetails(fid).then((res) => {
+    //获取消息详情
+    getMsgContent(fid){
+      this.page = 1;
+      this.msg.fid = fid;
+      this.loading = true;
+      this.noMore = false;
+      getMsgDetails(fid, 1, 10).then((res) => {
         if (res.data.code === 2000) {
-          this.currentUser.avatar = res.data.data.avatar;
-          this.currentUser.name = res.data.data.name;
-          this.currentMsgDetails = res.data.data.messages;
-          this.msg.fid = fid;
+          let tempData = res.data.data;
+          this.currentUser.avatar = tempData.avatar;
+          this.currentUser.name = tempData.name;
+          this.currentMsgDetails = tempData.messages;
         }
+        this.loading = false;
+      });
+    },
+    //获取更多
+    getMoreMsgContent(fid){
+      this.loading = true,
+      getMsgDetails(fid, this.page, 10).then((res) => {
+        if (res.data.code === 2000) {
+          let tempData = res.data.data;
+          if (tempData.messages.length < 10) {
+            this.noMore = true;
+          }
+          this.currentMsgDetails = tempData.messages.concat(this.currentMsgDetails) 
+        }
+        this.loading = false;
       });
     },
     _sendMsg(){
@@ -150,23 +173,44 @@ export default {
       }
     }, 
     toBottom() {
-      this.$refs.msgBox.scrollTop = this.$refs.msgBox.scrollHeight
+      let scroll= document.getElementById("msgBox")
+      if (this.allowToBottom) {
+        scroll.scrollTop = scroll.scrollHeight;
+      } else {
+        scroll.scrollTop = 100;
+        this.allowToBottom = true;
+      }
     },
+    lazyLoading(e){
+      if(e.target.id === "msgBox"){
+        let scroll= document.getElementById("msgBox")
+        if (scroll.scrollTop < 30 && !this.loading && !this.noMore) {
+          this.page++;
+          this.allowToBottom = false;
+          this.getMoreMsgContent(this.msg.fid);
+        }
+      }
+    }
   },
   components: {
     "emoji-selector": EmojiSelector
+  },
+  updated(){
+    this.toBottom()
   },
   created(){
     if (this.$route.params.fid) {
       let fid = Number(this.$route.params.fid)
       this.msg.fid = fid;
-      this._getMsgDetails(fid);
+      this.getMsgContent(fid);
     }
     this.initWebSocket();
     this._getMsgList();
+    window.addEventListener('scroll', this.lazyLoading, true); 
   },
   beforeDestroy() {
     this.websocket.close();
+    window.removeEventListener('scroll', this.lazyLoading);
   },
   filters:{
     toTime(time){
