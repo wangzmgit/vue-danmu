@@ -3,7 +3,7 @@
     <div class="v-card" v-for="(item, index) in recommendVideo" :key="index">
       <div class="card" @click="video(item.vid)">
         <hover-mask>
-          <img class="cover" :src="item.cover"/>
+          <img v-lazy="item.cover" class="cover" />
           <template class="mask" v-slot:action>
             <p class="mask-title">{{item.title}}</p>
             <p class="mask-up">UP:{{ item.author }}</p>

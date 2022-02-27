@@ -3,6 +3,7 @@ import App from './App.vue';
 import router from './router';
 import store from './store';
 import config from './config';
+import VueLazyload from 'vue-lazyload';
 import "./assets/iconfont/iconfont.css";
 import {
     Button,
@@ -31,6 +32,13 @@ import {
 } from "ant-design-vue";
 
 Vue.use(Menu);
+Vue.use(VueLazyload);
+Vue.use(VueLazyload, {
+    preLoad: 1.3,
+    error: require('./assets/error.png'),
+    loading: require('./assets/loading.gif'),
+    attempt: 1
+})
 Vue.prototype.$success = Modal.success;
 Vue.prototype.$message = message;
 Vue.prototype.$config = config;
@@ -81,7 +89,7 @@ new Vue({
 }).$mount('#app')
 
 console.log(
-    `%c 版本号：4.3.0 %c 适用后端版本:4.3.0%c`,
+    `%c 版本号：4.3.1 %c 适用后端版本:4.3.0 %c`,
     'background:rgb(244,167,89) ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff',
     'background:rgb(30,152,255) ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff',
     'background:transparent'

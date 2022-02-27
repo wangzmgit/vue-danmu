@@ -2,7 +2,7 @@
   <div class="card-list">
     <div class="v-card" v-for="(item, index) in videos" :key="index">
       <div class="card" @click="video(item.vid)">
-        <img :src="item.cover" />
+        <img v-lazy="item.cover" :key="item.cover"/>
         <div class="title">
           <p>{{ item.title }}</p>
         </div>

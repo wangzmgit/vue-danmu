@@ -3,7 +3,7 @@
     <div class="emoji-body">
       <ul class="emoji-items">
         <li class="emoji-item" v-for="(item, index) in emojilist" :key="index" @click="chooseEmoji(item.title)" >
-          <img class="emoji-img" :src="require('@/assets/emoji/' + item.url)" />
+          <img class="emoji-img" v-lazy="require('@/assets/emoji/' + item.url)" />
         </li>
       </ul>
     </div>
