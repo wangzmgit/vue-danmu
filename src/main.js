@@ -89,7 +89,7 @@ new Vue({
 }).$mount('#app')
 
 console.log(
-    `%c 版本号：4.4.0 %c 适用后端版本:4.4.0 %c`,
+    `%c 版本号：4.4.1 %c 适用后端版本:4.4.0 - 4.4.1 %c`,
     'background:rgb(244,167,89) ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff',
     'background:rgb(30,152,255) ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff',
     'background:transparent'

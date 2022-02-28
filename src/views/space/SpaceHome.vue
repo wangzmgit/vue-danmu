@@ -41,7 +41,7 @@
             </div>
           </div>
           <div class="my-upload-card-btn">
-            <a-button v-if="item.review" type="link" @click="modify(item.vid)">
+            <a-button class="modify" v-if="item.review" type="link" @mouseover="showMenu(index, item.vid)">
               <a-icon type="form" />修改内容
             </a-button>
             <a-button v-else type="link" @click="viewStatus(item.vid)">
@@ -50,6 +50,15 @@
             <a-button type="link" @click="deleteMyVideo(item.vid)">
               <a-icon type="delete" />删除
             </a-button>
+            <!--修改视频-->
+            <div v-show="modifyMenu[index]" class="modify-menu" @mouseleave="showMenu(index, 0)">
+              <div class="menu-item">
+                <span class="modify" @click="handleModify(5001)">修改视频</span>
+              </div>
+              <div class="menu-item">
+                <span class="modify" @click="handleModify(5002)">修改信息</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -57,14 +66,6 @@
     <div class="page-box">
       <a-pagination simple :current="page" :defaultPageSize="8" :total="count" @change="pageChange"/>
     </div>
-    <!--对话框-->
-    <a-modal v-model="showModal" title="修改视频" on-ok="handleOk">
-      <template slot="footer">
-        <a-button type="primary" @click="handleModify(5001)">修改视频</a-button>
-        <a-button type="primary" @click="handleModify(5002)">修改信息</a-button>
-      </template>
-      <p>请选择要修改的内容</p>
-    </a-modal>
   </div>
 </template>
 
@@ -72,7 +73,6 @@
 import storage from "@/utils/stored-data.js";
 import { getFollowData } from "@/api/follow.js";
 import { getMyVideo, deleteVideo } from "@/api/video.js";
-//videoUpdateRequest
 export default {
   data() {
     return {
@@ -85,6 +85,7 @@ export default {
       videoList: [],
       showModal: false,
       vid: 0,
+      modifyMenu: [],
     };
   },
   computed: {
@@ -118,10 +119,17 @@ export default {
         this.$message.error(err.response.data.msg);
       });
     },
-    //打开修改对话框
-    modify(vid) {
+    showMenu(index, vid) {
+      console.log(index);
+      if (this.modifyMenu[index] === true) {
+        this.$set(this.modifyMenu, index, false);
+        return;
+      }
+      for (let i = 0; i < this.videoList.length; i++) {
+        this.$set(this.modifyMenu, i, false);
+      }
       this.vid = vid;
-      this.showModal = true;
+      this.modifyMenu[index] = true;
     },
     //选择修改内容
     handleModify(status) {
@@ -169,7 +177,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 .user-card {
   display: flex;
 }
@@ -298,6 +306,38 @@ export default {
   border-top: 0;
   border-bottom-left-radius: 6px;
   border-bottom-right-radius: 6px;
+}
+
+//修改视频信息
+.modify-menu {
+  width: 160px;
+  height: 92px;
+  z-index: 999;
+  position: absolute;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 30px rgb(0 0 0 / 10%);
+  .menu-item {
+    margin-top: 7px;
+    width: 120px;
+    height: 36px;
+    margin-left: 20px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    .modify {
+      display: block;
+      color: #18191b;
+      line-height: 36px;
+      text-align: left;
+      border-radius: 6px;
+      padding-left: 6px;
+      &:hover {
+        background-color: #c9ccd0;
+      }
+    }
+  }
 }
 
 .page-box {
