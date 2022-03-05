@@ -6,11 +6,12 @@
       <!--list-->
       <div v-for="(item,index) in msgList" :key="index">
         <!--item-->
-        <div class="msg-user-item" @click="getMsgContent(item.uid)">
+        <div class="msg-user-item" @click="getMsgContent(item.uid, index)">
           <a-avatar class="msg-avatar" v-if="item.avatar" :size="45" :src="item.avatar" />
           <a-avatar class="msg-avatar" v-else :size="45" icon="user" />
           <span class="msg-name">{{item.name}}</span>
           <span class="msg-date">{{item.created_at | toTime}}</span>
+          <div class="dot" v-if="!item.status"></div>
         </div>
       </div>
     </div>
@@ -30,9 +31,11 @@
             <a-avatar class="avatar-left" v-if="currentUser.avatar" :size="45" :src="currentUser.avatar" />
             <a-avatar class="avatar-left" v-else :size="45" icon="user" />
             <div class="content-left-box">
-              <span class="content-left">{{item.content}}</span>
+              <span class="content-left"  v-html="$options.filters.toEmoji(item.content)"></span>
             </div>
           </div>
+          <!-- 解决div无法撑开的问题 -->
+          <div style="clear:both;" />
         </div>
       </div>
       <div class="emoji-area">
@@ -58,7 +61,8 @@ import { Base64 } from 'js-base64';
 import storage from "@/utils/stored-data.js";
 import { MsgSocket } from "@/utils/request.js";
 import { toRelativeTime } from "@/utils/time.js";
-import { getMsgList,getMsgDetails,sendMsg } from "@/api/message";
+import { getUserInfoByID } from "@/api/user.js";
+import { getMsgList,getMsgDetails,sendMsg, readMsg } from "@/api/message";
 import EmojiSelector from '@/components/Emoji/EmojiSelector';
 import { analyzeEmoji } from "@/components/Emoji/EmojiConversion";
 export default {
@@ -94,14 +98,16 @@ export default {
       getMsgList().then((res) => {
         if (res.data.code === 2000) {
           this.msgList = res.data.data.messages;
-          if(this.msg.fid === 0 && this.msgList.length > 0){  
-            this.getMsgContent(this.msgList[0].uid);
-          }
+          if (this.msg.fid !== 0) {
+            this.initSendUser(this.msg.fid)
+          } else if(this.msgList.length > 0){  
+            this.getMsgContent(this.msgList[0].uid,0);
+          } 
         }
       });
     },
     //获取消息详情
-    getMsgContent(fid){
+    getMsgContent(fid, index){
       this.page = 1;
       this.msg.fid = fid;
       this.loading = true;
@@ -115,6 +121,8 @@ export default {
         }
         this.loading = false;
       });
+      // this.msgList[index].status = true;
+      this.readMessage(fid,index);
     },
     //获取更多
     getMoreMsgContent(fid){
@@ -162,6 +170,35 @@ export default {
       this.websocket = new WebSocket(this.SocketURL);
       this.websocket.onmessage = this.websocketOnmessage;
     },
+    initSendUser(fid) {
+      //遍历当前消息列表查找用户
+      for(let i = 0; i < this.msgList.length; i++) {
+        if (this.msgList[i].uid === fid) {
+          this.getMsgContent(fid, i);
+          return;
+        }
+      }
+      //获取用户信息并添加到用户列表
+      getUserInfoByID(fid).then((res) => {
+        if (res.data.code === 2000) {
+          const user = res.data.data.user;
+          this.msgList.unshift({
+            id: fid,
+            avatar: user.avatar,
+            name: user.name,
+            created_at: new Date(),
+            status: true
+          });
+        }
+      })
+    },
+    readMessage(fid, index) {
+      readMsg(fid).then((res) => {
+        if (res.data.code === 2000) {
+          this.msgList[index].status = true;
+        }
+      })
+    },
     //数据接收
     websocketOnmessage(e){ 
       const res = JSON.parse(Base64.decode(e.data));
@@ -170,6 +207,27 @@ export default {
           form_id: res.fid,
           content: res.content,
         });
+      } else {
+        //遍历当前消息列表查找用户
+        for(let i = 0; i < this.msgList.length; i++) {
+          if (this.msgList[i].uid === res.fid) {
+            this.msgList[i].status = false;
+            return;
+          }
+        }
+        //获取用户信息并添加到用户列表
+        getUserInfoByID(res.fid).then((res) => {
+          if (res.data.code === 2000) {
+            const user = res.data.data.user;
+            this.msgList.push({
+              id: res.fid,
+              avatar: user.avatar,
+              name: user.name,
+              created_at: new Date(),
+              status: false
+            })
+          }
+        })
       }
     }, 
     toBottom() {
@@ -201,15 +259,16 @@ export default {
   created(){
     if (this.$route.params.fid) {
       let fid = Number(this.$route.params.fid)
-      this.msg.fid = fid;
-      this.getMsgContent(fid);
+      this.msg.fid = fid; 
     }
-    this.initWebSocket();
     this._getMsgList();
+    this.initWebSocket();
     window.addEventListener('scroll', this.lazyLoading, true); 
   },
   beforeDestroy() {
-    this.websocket.close();
+    if (this.websocket) {
+      this.websocket.close();
+    }
     window.removeEventListener('scroll', this.lazyLoading);
   },
   filters:{
@@ -245,28 +304,37 @@ export default {
   background-color: #fff;
   position: relative;
   border-bottom: 1px solid #e0e0e0;
-}
+  &:hover{
+    background-color: #f7f7f7;
+  }
 
-.msg-user-item:hover{
-  background-color: #f7f7f7;
-}
+  .msg-avatar{
+    margin: 8px 0 0 6px;
+  }
 
-.msg-avatar{
-  margin: 8px 0 0 6px;
-}
+  .dot {
+    top: 10px;
+    left: 42px;
+    width: 10px;
+    height: 10px;
+    position: absolute;
+    border-radius: 50%;
+    background-color: #f5222d;
+  }
 
-.msg-name {
-  position: absolute;
-  top: 8px;
-  left: 60px;
-  font-size: 16px;
-}
+  .msg-name {
+    position: absolute;
+    top: 8px;
+    left: 60px;
+    font-size: 16px;
+  }
 
-.msg-date {
-  position: absolute;
-  top: 28px;
-  left: 60px;
-  color: #808080;
+  .msg-date {
+    position: absolute;
+    top: 28px;
+    left: 60px;
+    color: #808080;
+  }
 }
 
 .msg-right{
@@ -305,7 +373,7 @@ export default {
 /**聊天部分 */
 .content-box{
   min-height: 70px;
-  margin: 0 20px;
+  margin: 6px 20px;
   &:nth-child(1){
     margin-top: 10px;
   }

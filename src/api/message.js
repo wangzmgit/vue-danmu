@@ -19,3 +19,8 @@ export const getMsgDetails = (fid, page, page_size) => {
 export const sendMsg = ({ fid, content }) => {
     return request.post('v1/message/send', { fid, content })
 }
+
+//已读私信
+export const readMsg = (fid) => {
+    return request.post('v1/message/read', { fid })
+}

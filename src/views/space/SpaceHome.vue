@@ -120,7 +120,6 @@ export default {
       });
     },
     showMenu(index, vid) {
-      console.log(index);
       if (this.modifyMenu[index] === true) {
         this.$set(this.modifyMenu, index, false);
         return;
