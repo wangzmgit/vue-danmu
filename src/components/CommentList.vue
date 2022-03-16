@@ -17,7 +17,7 @@
           <span>{{item.content}}</span>
           <div class="comment-btn">
             <a-button v-if="userInfo.uid != 0" type="link" @click="showReply(item.cid,item,index)">回复</a-button>
-            <a-button v-if="item.uid == userInfo.uid" type="link" @click="_deleteComment(item.cid)">删除</a-button>
+            <a-button v-if="item.uid == userInfo.uid" type="link" @click="_deleteComment(item.cid, index)">删除</a-button>
           </div>
         </div>
         <!--分割线-->
