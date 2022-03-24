@@ -21,7 +21,7 @@
               <i v-else class="iconfont icon-collect" style="color:#faad14" @click="cancelCollectClick"/>
               <p>{{videoInfo.collect_count}}</p>
             </div>
-            <p>上传于{{ videoInfo.create_at | toTime }}</p>
+            <p>上传于{{ videoInfo.created_at | toTime }}</p>
             <p>{{videoInfo.clicks}}播放</p>
           </div>
           <!--视频简介-->

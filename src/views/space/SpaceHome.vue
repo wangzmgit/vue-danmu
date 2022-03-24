@@ -83,7 +83,6 @@ export default {
         followers:0,
       },
       videoList: [],
-      showModal: false,
       vid: 0,
       modifyMenu: [],
     };
