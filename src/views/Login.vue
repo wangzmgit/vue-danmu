@@ -93,7 +93,7 @@ export default {
             if(res.data.code === 2000){
               //保存token和用户信息，并设置两周过期
               storage.set("token", res.data.data.token, 14 * 24 * 60);
-              storage.set('userInfo',res.data.data.user, 14 * 24 * 60)
+              storage.set('userInfo',res.data.data.user, 14 * 24 * 60);
               this.$router.push({ name: "Home" });
             }else{
               this.$message.error(res.data.msg);

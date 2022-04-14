@@ -179,11 +179,11 @@ export default {
         }
       }
       //获取用户信息并添加到用户列表
-      getUserInfoByID(fid).then((res) => {
-        if (res.data.code === 2000) {
-          const user = res.data.data.user;
+      getUserInfoByID(fid).then((resUser) => {
+        if (resUser.data.code === 2000) {
+          const user = resUser.data.data.user;
           this.msgList.unshift({
-            id: fid,
+            uid: fid,
             avatar: user.avatar,
             name: user.name,
             created_at: new Date(),
@@ -216,11 +216,11 @@ export default {
           }
         }
         //获取用户信息并添加到用户列表
-        getUserInfoByID(res.fid).then((res) => {
-          if (res.data.code === 2000) {
-            const user = res.data.data.user;
+        getUserInfoByID(res.fid).then((resUser) => {
+          if (resUser.data.code === 2000) {
+            const user = resUser.data.data.user;
             this.msgList.push({
-              id: res.fid,
+              uid: res.fid,
               avatar: user.avatar,
               name: user.name,
               created_at: new Date(),
